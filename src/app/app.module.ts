@@ -10,14 +10,20 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
 
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatListModule } from '@angular/material/list';
+
+import { NgPipesModule } from 'ngx-pipes';
+import { NgxPrintModule } from 'ngx-print';
 import { LabelComponent } from './components/label/label.component';
 
 import { DataService } from './services/data.service';
+import { InvoiceComponent } from './components/invoice/invoice.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    LabelComponent
+    LabelComponent,
+    InvoiceComponent
   ],
   imports: [
     BrowserModule,
@@ -26,7 +32,10 @@ import { DataService } from './services/data.service';
     AngularFireModule,
     AngularFirestoreModule.enablePersistence(),
     AngularFireModule.initializeApp(environment.firebase),
-    MatGridListModule
+    MatGridListModule,
+    MatListModule,
+    NgxPrintModule,
+    NgPipesModule
   ],
   providers: [
     DataService

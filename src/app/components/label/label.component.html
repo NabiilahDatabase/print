@@ -1,3 +1,179 @@
-<p>
-  label works!
-</p>
+<!--
+<button
+  printSectionId="print-section"
+  styleSheetFile="./label.component.scss"
+  ngxPrint>print</button> -->
+
+<div id="no-print" class="text-center">
+  <br><br><br>
+    <button class="btn btn-info" (click)="print()"><span class="glyphicon glyphicon-print"></span> PRINT</button>
+</div>
+
+<div id="print-label" *ngIf="closing; else noItems">
+    <div class="row labelprint" *ngFor="let item of closing">
+      <div class="col-10">
+        <div class="row">
+          <div class="col-9 bot-pad">
+            <span class="id">DATE#{{ item.id | shorten: '13' | date: 'yyMMdd' }}</span><br>
+            <strong><u>Kepada:</u></strong>
+          </div>
+          <div class="col-3 bot-pad orderan"><strong><u>Orderan:</u></strong></div>
+        </div>
+        <div class="row">
+          <div class="col-9">
+            <strong>{{ item.penerima | uppercase }} </strong>[{{ item.nPenerima | shorten: '13' }}]
+            <p>{{ item.alamat }}</p>
+          </div>
+          <div class="col-3">
+            <div *ngFor="let barang of item.listBarang">
+              {{ barang.nama }} {{ barang.warna }}
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-9">
+            <strong><u>Pengirim:</u></strong><br>
+            <strong>{{ item.pengirim }}</strong>
+            <p>{{ item.nPengirim }}</p>
+          </div>
+          <div class="col-3">
+            <p><strong><u>Kode CS:</u></strong> {{ item.cs }}</p>
+            <span class="eksp bg-medium">
+              <strong>{{ item.ekspedisi }}</strong>
+              <strong *ngIf="item.service">-{{ item.service }}</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="col-2 text-center">
+        <br>
+        <img src="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{item.id}}"/><br>
+        <span class="id">{{ item.id }}</span>
+        <br>
+      </div>
+    </div>
+
+    <div class="row labelprint" *ngFor="let inv of closing">
+      <div class="col-2 logo">
+        <div>
+          <img src="https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl={{inv.id}}"/><br>
+        </div>
+      </div>
+      <div class="col-5 bot-pad">
+        <h4><strong>NABIILAHSTORE.COM</strong></h4>
+        <p>Distributor Baju Muslim</p>
+      </div>
+      <div class="col-2 bot-pad">
+        <strong>Tanggal:</strong><br>
+        <p>{{ inv.id | shorten: '13' | date: 'dd/MM/yyyy' }}</p>
+      </div>
+      <div class="col-3 bot-pad">
+        <strong>Nomor Invoice:</strong><br>
+        <p>{{ inv.id }}</p>
+      </div>
+      <div class="row list">
+        <div class="col-6 navigasi"><strong>Nama Produk</strong></div>
+        <div class="col-1 navigasi"><strong>Jumlah</strong></div>
+        <div class="col-1 navigasi"><strong>Berat</strong></div>
+        <div class="col-2 navigasi"><strong>Harga</strong></div>
+        <div class="col-2 navigasi"><strong>Sub-total</strong></div>
+      </div>
+      <div class="row list" *ngFor="let barang of inv.listBarang">
+        <div class="col-6 ">[{{ barang.barcode }}] {{ barang.nama +" "+ barang.warna | uppercase }}</div>
+        <div class="col-1  text-center">1</div>
+        <div class="col-1 "> </div>
+        <div class="col-2 ">Rp.{{ barang.harga | number }}</div>
+        <div class="col-2 ">Rp.{{ barang.harga | number }}</div>
+      </div>
+      <div class="row list">
+        <div class="col-6 "><strong>{{ inv.ekspedisi | uppercase }}<span *ngIf="inv.service">- {{ inv.service | uppercase }}</span></strong></div>
+        <div class="col-1 "> </div>
+        <div class="col-1  text-center"><strong>{{ inv.berat }} Kg</strong></div>
+        <div class="col-2 "><strong>Rp.{{ inv.ongkir | number }}</strong></div>
+        <div class="col-2 "><strong>Rp.{{ inv.ongkir * inv.berat | number }}</strong></div>
+      </div>
+      <div class="row list">
+        <div class="col-6 "><strong>Diskon</strong></div>
+        <div class="col-1 "></div>
+        <div class="col-1 "></div>
+        <div class="col-2 "></div>
+        <div class="col-2 "><strong>Rp.{{ inv.diskon | number }}</strong></div>
+      </div>
+      <div class="row list">
+          <div class="col-6 "><strong>Deposit</strong></div>
+          <div class="col-1 "></div>
+          <div class="col-1 "></div>
+          <div class="col-2 "></div>
+          <div class="col-2 "><strong>Rp.{{ inv.deposit | number }}</strong></div>
+        </div>
+      <br><br>
+      <div class="row list">
+        <div class="col-6 "><h4><strong>TOTAL</strong></h4></div>
+        <div class="col-1 "> </div>
+        <div class="col-1 "> </div>
+        <div class="col-2 "> </div>
+        <div class="col-2 "><h4><strong>Rp.{{ [(inv.listBarang | pluck:'harga' | sum),inv.ongkir*inv.berat,inv.diskon,inv.deposit] | sum | number }}</strong></h4></div>
+      </div>
+      <br><br>
+      <div class="col-2">
+        <br>
+        Alamat Tujuan:
+      </div>
+      <div class="col-8">
+        <h4><strong>{{ inv.penerima }}</strong></h4>
+        <p>{{ inv.alamat }}</p>
+      </div>
+      <div class="col-2">
+        <br>
+        <span><h4>KODE CS: <strong>{{ inv.cs }}</strong></h4></span>
+      </div>
+    </div>
+</div>
+
+<!--
+<div *ngIf="closing; else noItems">
+  <mat-grid-list cols="12" rowHeight="80px" *ngFor="let item of closing" class="label">
+    <mat-grid-tile colspan="7">
+      <div class="bot-pad">
+        <strong class="po">ID#{{ item.id | shorten: '13' | date: 'yyMMdd' }}</strong>
+        <br><strong>Kepada:</strong>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3">
+      <div class="bot-pad">
+        <strong>Orderan:</strong>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="2" rowspan="3">
+      <img src="https://chart.googleapis.com/chart?chs=200x200&cht=qr&chl={{item.id}}"/>
+      <br>{{ item.id }}
+    </mat-grid-tile>
+    <mat-grid-tile colspan="7">
+      <div class="center-pad">
+        <p><strong>{{ item.penerima | uppercase }}</strong> [{{ item.nPenerima }}]</p>
+        <p>{{ item.alamat }}</p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile>
+        <div class="col-3">
+            <div *ngFor="let barang of item.listBarang">
+              {{ barang.nama }} {{ barang.warna }}
+            </div>
+          </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="7">
+      <div class="center-pad">
+        <p>Pengirim:</p>
+        <p>{{ item.pengirim }}</p>
+        <p>{{ item.nPengirim }}</p>
+      </div>
+    </mat-grid-tile>
+    <mat-grid-tile colspan="3">{{ item.ekspedisi }}</mat-grid-tile>
+  </mat-grid-list>
+</div>
+-->
+
+<ng-template #noItems>
+  <hr>
+  <h5>Maaf Tidak ada closingan</h5>
+</ng-template>

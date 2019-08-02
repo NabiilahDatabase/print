@@ -1,17 +1,13 @@
-<div *ngIf="closing.length > 0; else noItems"></div>
-<mat-grid-list cols="3" rowHeight="2:1" *ngFor="let item of closing">
-  <mat-grid-tile>{{ item.penerima }}</mat-grid-tile>
-  <mat-grid-tile>{{ item.pengirim }}</mat-grid-tile>
-  <mat-grid-tile>{{ item.id }}</mat-grid-tile>
-</mat-grid-list>
-
-<div class="container">
-  <app-label></app-label>
-</div>
-
-<ng-template #noItems>
-  <hr>
-  <h5>Maaf Tidak ada closingan</h5>
-</ng-template>
+<nav class="navbar fixed-top navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Data Closing</a>
+      <ul class="nav navbar-nav">
+        <li><a href="#" (click)="print=true"><span class="glyphicon glyphicon-tag"></span> Label & Invoice</a></li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#" (click)="print=false"><span class="glyphicon glyphicon-user"></span> Edit Data</a></li>
+      </ul>
+  </nav>
+<app-label *ngIf="print"></app-label>
+<app-invoice *ngIf="!print"></app-invoice>
 
 <router-outlet></router-outlet>
