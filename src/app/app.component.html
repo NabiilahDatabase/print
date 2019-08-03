@@ -1,8 +1,8 @@
 <div *ngIf="closing.length > 0; else noItems"></div>
 <mat-grid-list cols="3" rowHeight="2:1" *ngFor="let item of closing">
   <mat-grid-tile>{{ item.penerima }}</mat-grid-tile>
-  <mat-grid-tile>2</mat-grid-tile>
-  <mat-grid-tile>3</mat-grid-tile>
+  <mat-grid-tile>{{ item.pengirim }}</mat-grid-tile>
+  <mat-grid-tile>{{ item.id }}</mat-grid-tile>
 </mat-grid-list>
 
 <div class="container">
