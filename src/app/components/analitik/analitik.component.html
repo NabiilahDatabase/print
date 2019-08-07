@@ -3,16 +3,38 @@
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
   </head>
 
-  <div *ngIf="closing" class="container">
-    <br><br><br>
-    <div *ngFor="let item of closing">
-      <div *ngFor="let barang of item.listBarang">
-        {{ barang | pluck: 'nama' }} {{ barang | pluck: 'warna' }}
+  <br><br><br>
+  <div class="container">
+    <mat-form-field class="example-full-width">
+        <input matInput [matDatepicker]="picker" placeholder="Pilih Tanggal Kirim" [formControl]="date">
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker touchUi #picker></mat-datepicker>
+    </mat-form-field>
+    <button class="btn btn-secondary" type="button" (click)="tampil()">
+        <i class="fa fa-search"></i>TAMPILKAN
+    </button>
+  </div>
+
+  <div *ngIf="closing; else noItems" class="container">
+    <div *ngFor="let items of closing">
+      <div *ngFor="let barang of items.listBarang">
+        "{{ items.id }}";"{{ barang | pluck: 'barcode' }}";"{{ barang | pluck: 'nama' }}";"{{ barang | pluck: 'warna' }}";"{{ barang | pluck: 'harga' }}";"{{ items.cs }}";"{{ items.penerima }}";"{{ barang | pluck: 'toko' }}"
       </div>
     </div>
   </div>
 
+    <!--
+    <div *ngFor="let item of closing | groupBy: 'tglDikirim' | keyvalue">
+      <div *ngIf="item.key!=='undefined'">
+        {{ item.key }}
+        <div *ngFor="let b of item.value">
+          <div *ngFor="let brg of b | pluck: 'listBarang' | flatten">
+            {{ b.id }}; {{ brg.barcode }}; {{ brg.nama }}; {{ brg.warna }}
+          </div>
+        </div>
+      </div>
+    </div>
+  -->
   <ng-template #noItems>
-    <br><br>
-    <h5 class="text-center">Mutasi tidak ditemukan</h5>
+    <h5 class="text-center">Tidak Ada Kiriman</h5>
   </ng-template>

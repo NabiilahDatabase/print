@@ -1,7 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
-import { Observable } from 'rxjs';
 import { PopupService } from 'src/app/services/popup.service';
+import { MatDialog } from '@angular/material';
+
+import { ScannerComponent } from '../../tool/scanner/scanner.component';
 
 @Component({
   selector: 'app-invoice',
@@ -10,17 +12,32 @@ import { PopupService } from 'src/app/services/popup.service';
 })
 export class InvoiceComponent implements OnInit {
 
+  qrResultString: string;
+
   task;
   closing;
   id: string;
 
   constructor(
     private dataService: DataService,
-    private popup: PopupService
+    private popup: PopupService,
+    public dialog: MatDialog
     ) {
   }
 
   ngOnInit() {
+  }
+
+  openDialog(): void {
+    const dialogRef = this.dialog.open(ScannerComponent, {
+      width: '250px',
+      data: {code: this.qrResultString}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.qrResultString = result;
+    });
   }
 
   cari() {

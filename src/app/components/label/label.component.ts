@@ -16,7 +16,7 @@ export class LabelComponent implements OnInit {
   closing$: Observable<any>;
 
   constructor(private dataService: DataService) {
-    this.task = this.dataService.getClosing('Dibayar').subscribe(res => {
+    this.task = this.dataService.getClosing('status', 'Dibayar').subscribe(res => {
       this.closing = res;
       console.log('Print: ' + res);
     });
@@ -27,9 +27,13 @@ export class LabelComponent implements OnInit {
 
   print() {
     window.print();
-    this.closing.forEach(data => {
-      this.dataService.updateClosing(data.id, {status: 'Diprint', wktDiprint: this.dataService.getTimeNow()});
-    });
+  }
+  selesai() {
+    if (confirm('Yakin sudah di print semua?')) {
+      this.closing.forEach(data => {
+        this.dataService.updateClosing(data.id, {status: 'Diprint', wktDiprint: this.dataService.getTimeNow()});
+      });
+    }
   }
 
 }

@@ -15,6 +15,9 @@
 <div class="input-group">
   <input type="text" class="form-control" [(ngModel)]="id" placeholder="Masukkan ID Invoice">
   <div class="input-group-append">
+    <button class="btn btn-secondary" type="button" (click)="openDialog()">
+      <i class="fa fa-barcode"></i>
+    </button>
     <button class="btn btn-secondary" type="button" (click)="cari()">
       <i class="fa fa-search"></i>
     </button>

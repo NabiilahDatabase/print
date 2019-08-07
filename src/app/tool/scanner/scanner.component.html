@@ -1,0 +1,12 @@
+
+<div mat-dialog-content>
+  <zxing-scanner #scanner (scanSuccess)="barcode($event)"></zxing-scanner>
+  {{ data.code }}
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Tutup</button>
+  <!--
+    <button mat-button [mat-dialog-close]="data.code" cdkFocusInitial>Ok</button>
+  -->
+</div>
+

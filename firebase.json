@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "site": "nabiilah-closing",
+    "public": "dist/print",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}

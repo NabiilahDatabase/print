@@ -6,6 +6,8 @@ import { InvoiceComponent } from './components/invoice/invoice.component';
 import { MutasiComponent } from './components/mutasi/mutasi.component';
 import { AnalitikComponent } from './components/analitik/analitik.component';
 
+import { ScannerComponent } from './tool/scanner/scanner.component';
+
 const routes: Routes = [
   { path: '', redirectTo: 'mutasi', pathMatch: 'full' },
   { path: 'print', component: LabelComponent },
@@ -15,7 +17,11 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  imports: [
+    RouterModule.forRoot(routes),
+  ],
+  exports: [
+    RouterModule,
+  ]
 })
 export class AppRoutingModule { }

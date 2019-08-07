@@ -2,10 +2,15 @@ import { NgModule } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatListModule } from '@angular/material/list';
-import { MatPaginatorModule } from '@angular/material';
+import { MatPaginatorModule, MatNativeDateModule, MatInputModule } from '@angular/material';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   imports: [
@@ -16,6 +21,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSnackBarModule,
     MatChipsModule,
     MatTooltipModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+    MatMomentDateModule,
+    MatInputModule,
   ],
   exports: [
     MatTableModule,
@@ -25,6 +37,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatSnackBarModule,
     MatChipsModule,
     MatTooltipModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatNativeDateModule,
+    MatMomentDateModule,
+    MatInputModule,
   ]
 })
 

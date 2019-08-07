@@ -18,7 +18,7 @@ export class MutasiComponent implements OnInit {
     private dataService: DataService,
     private popup: PopupService,
     ) {
-    this.task = this.dataService.getClosing('Cek Mutasi').subscribe(res => {
+    this.task = this.dataService.getClosing('status', 'Cek Mutasi').subscribe(res => {
       this.closing = res;
       console.log('Mutasi: ' + res);
     });

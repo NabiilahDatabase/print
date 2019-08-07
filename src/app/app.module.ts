@@ -12,6 +12,7 @@ import { environment } from '../environments/environment';
 
 import { NgPipesModule } from 'ngx-pipes';
 import { NgxPrintModule } from 'ngx-print';
+import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { LabelComponent } from './components/label/label.component';
 
 import { DataService } from './services/data.service';
@@ -22,13 +23,16 @@ import { AlertModule } from 'ngx-bootstrap';
 import { MutasiComponent } from './components/mutasi/mutasi.component';
 import { AnalitikComponent } from './components/analitik/analitik.component';
 
+import { ScannerComponent } from './tool/scanner/scanner.component';
+
 @NgModule({
   declarations: [
     AppComponent,
     LabelComponent,
     InvoiceComponent,
     MutasiComponent,
-    AnalitikComponent
+    AnalitikComponent,
+    ScannerComponent
   ],
   imports: [
     BrowserModule,
@@ -43,10 +47,16 @@ import { AnalitikComponent } from './components/analitik/analitik.component';
     MaterialModule,
     NgxPrintModule,
     NgPipesModule,
+    ZXingScannerModule,
   ],
   providers: [
     DataService
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [
+    AppComponent
+  ],
+  entryComponents: [
+    ScannerComponent
+  ]
 })
 export class AppModule { }
