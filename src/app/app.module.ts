@@ -19,12 +19,14 @@ import { LabelComponent } from './components/label/label.component';
 import { DataService } from './services/data.service';
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { AlertModule } from 'ngx-bootstrap';
+import { MutasiComponent } from './components/mutasi/mutasi.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LabelComponent,
-    InvoiceComponent
+    InvoiceComponent,
+    MutasiComponent
   ],
   imports: [
     BrowserModule,
