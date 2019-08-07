@@ -15,18 +15,20 @@ import { NgxPrintModule } from 'ngx-print';
 import { LabelComponent } from './components/label/label.component';
 
 import { DataService } from './services/data.service';
-import { MaterialModule } from './material.module';
+import { MaterialModule } from './modules/material.module';
 
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { AlertModule } from 'ngx-bootstrap';
 import { MutasiComponent } from './components/mutasi/mutasi.component';
+import { AnalitikComponent } from './components/analitik/analitik.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LabelComponent,
     InvoiceComponent,
-    MutasiComponent
+    MutasiComponent,
+    AnalitikComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +42,7 @@ import { MutasiComponent } from './components/mutasi/mutasi.component';
     AlertModule.forRoot(),
     MaterialModule,
     NgxPrintModule,
-    NgPipesModule
+    NgPipesModule,
   ],
   providers: [
     DataService
