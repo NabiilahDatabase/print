@@ -3,7 +3,7 @@
   <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 </head>
 
-<div class="container">
+<div *ngIf="closing" class="container">
 <br><br><br>
 
 <table mat-table *ngIf="closing; else noItems" [dataSource]="closing" class="mat-elevation-z8 table-hover">
@@ -59,5 +59,5 @@
 
 <ng-template #noItems>
   <br><br>
-  <h5 class="text-center">Semua sudah di print</h5>
+  <h5 class="text-center">Mutasi tidak ditemukan</h5>
 </ng-template>

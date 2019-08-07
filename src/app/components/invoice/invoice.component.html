@@ -43,12 +43,13 @@
                 {{ closing.status }}
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Cek Mutasi')">Cek Mutasi</a>
-              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Dibayar')">Dibayar</a>
-              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Diprint')">Diprint</a>
-              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Dikirim')">Dikirim</a>
-              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Resi')">Resi</a>
-            </div>
+                <a class="dropdown-item" (click)="gantiStatus(id,'Cek Mutasi')">Cek Mutasi</a>
+                <a class="dropdown-item" (click)="gantiStatus(id,'Dibayar')">Dibayar</a>
+                <a class="dropdown-item" (click)="gantiStatus(id,'Diprint')">Diprint</a>
+                <a class="dropdown-item" (click)="gantiStatus(id,'Dikirim')">Dikirim</a>
+                <a class="dropdown-item" (click)="gantiStatus(id,'Resi')">Resi</a>
+                <a class="dropdown-item bg-danger" (click)="hapus(closing)">HAPUS</a>
+              </div>
           </div>
         </td>
       </tr>

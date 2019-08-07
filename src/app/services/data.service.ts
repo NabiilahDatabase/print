@@ -77,6 +77,10 @@ export class DataService {
     this.db.collection('closing').doc(id).update(data);
   }
 
+  deleteClosing(id: string) {
+    this.db.collection('closing').doc(id).delete();
+  }
+
   getTimeNow() {
     return moment().toDate().getTime();
   }

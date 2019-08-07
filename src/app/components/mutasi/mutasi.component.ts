@@ -20,6 +20,7 @@ export class MutasiComponent implements OnInit {
     ) {
     this.task = this.dataService.getClosing('Cek Mutasi').subscribe(res => {
       this.closing = res;
+      console.log('Mutasi: ' + res);
     });
   }
 
@@ -28,18 +29,14 @@ export class MutasiComponent implements OnInit {
 
   dibayar(item) {
     this.dataService.updateClosing(item.id, {status: 'Dibayar', wktDicek: this.dataService.getTimeNow()});
-    this.popup.showToast(item.penerima + 'telah membayar', 'Sembunyikan');
+    this.popup.showToast(item.penerima + ' telah membayar', 'Sembunyikan');
   }
 
   showBarang(barang) {
     let listBarang = '';
     barang.map(item => {
-      listBarang += item.nama + ' ';
+      listBarang += item.nama + ' - ';
     });
     this.popup.showToast(listBarang, 'Tutup');
-  }
-
-  onDestroy() {
-    this.task.unsubscribe();
   }
 }
