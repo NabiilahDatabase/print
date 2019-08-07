@@ -18,7 +18,6 @@ export class LabelComponent implements OnInit {
   constructor(private dataService: DataService) {
     this.task = this.dataService.getClosing('Dibayar').subscribe(res => {
       this.closing = res;
-      console.log(res);
     });
   }
 
@@ -28,9 +27,12 @@ export class LabelComponent implements OnInit {
   print() {
     window.print();
     this.closing.forEach(data => {
-      console.log(data.id);
       this.dataService.updateClosing(data.id, {status: 'Diprint'});
     });
+  }
+
+  onDestroy() {
+    this.task.unsubscribe();
   }
 
 }

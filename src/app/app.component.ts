@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
 
   title = 'Print Label & Invoice';
-  print = true;
+  cek = true;
 
   constructor() {
   }

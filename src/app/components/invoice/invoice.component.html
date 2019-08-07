@@ -1,4 +1,4 @@
-<div class="container">
+  <!--
   <div class="col-4">
     Masukkan Nomor Invoice:
   </div>
@@ -8,4 +8,43 @@
       <button id="button-addon5" type="submit" class="btn btn-primary"><i class="fa fa-search"></i></button>
     </div>
   </div>
+-->
+<div class="container">
+<br><br><br>
+<table class="table table-hover" *ngIf="closing; else noItems">
+    <thead>
+      <tr>
+        <th scope="col">#ID</th>
+        <th scope="col">Penerima</th>
+        <th scope="col">Total Mutasi</th>
+        <th scope="col">Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of closing">
+        <th scope="row">{{ item.id }}</th>
+        <td>{{ item.penerima }}</td>
+        <td>Rp.{{ [(item.listBarang | pluck:'harga' | sum), item.ongkir*item.berat, item.diskon, item.deposit] | sum | number }}</td>
+        <td>
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ item.status }}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+              <a class="dropdown-item" href="#">Cek Mutasi</a>
+              <a class="dropdown-item" href="#">Dibayar</a>
+              <a class="dropdown-item" href="#">Diprint</a>
+              <a class="dropdown-item" href="#">Dikirim</a>
+              <a class="dropdown-item" href="#">Resi</a>
+            </div>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
+
+<ng-template #noItems>
+  <br><br>
+  <h5 class="text-center">Data tidak ditemukan</h5>
+</ng-template>

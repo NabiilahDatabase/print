@@ -18,6 +18,7 @@ import { LabelComponent } from './components/label/label.component';
 
 import { DataService } from './services/data.service';
 import { InvoiceComponent } from './components/invoice/invoice.component';
+import { AlertModule } from 'ngx-bootstrap';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { InvoiceComponent } from './components/invoice/invoice.component';
     AngularFireModule,
     AngularFirestoreModule.enablePersistence(),
     AngularFireModule.initializeApp(environment.firebase),
+    AlertModule.forRoot(),
     MatGridListModule,
     MatListModule,
     NgxPrintModule,

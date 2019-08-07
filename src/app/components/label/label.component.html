@@ -6,7 +6,7 @@
 
 <div id="no-print" class="text-center">
   <br><br><br>
-    <button class="btn btn-info" (click)="print()"><span class="glyphicon glyphicon-print"></span> PRINT</button>
+    <button class="btn btn-info" (click)="print()"><span class="fa fa-print"></span> PRINT</button>
 </div>
 
 <div id="print-label" *ngIf="closing; else noItems">
@@ -174,6 +174,6 @@
 -->
 
 <ng-template #noItems>
-  <hr>
+  <br>
   <h5>Maaf Tidak ada closingan</h5>
 </ng-template>
