@@ -69,7 +69,15 @@ export class DataService {
     return this.closing$;
   }
 
+  getClosingan(iid: string) {
+    return this.db.collection('closing').doc(iid).valueChanges();
+  }
+
   updateClosing(id: string, data) {
     this.db.collection('closing').doc(id).update(data);
+  }
+
+  getTimeNow() {
+    return moment().toDate().getTime();
   }
 }

@@ -10,15 +10,23 @@ import { Observable } from 'rxjs';
 export class InvoiceComponent implements OnInit {
 
   task;
-  closing: Observable<any>;
+  closing;
+  id: string;
 
   constructor(private dataService: DataService) {
-    this.task = this.dataService.getClosing(null).subscribe(res => {
+  }
+
+  ngOnInit() {
+  }
+
+  cari() {
+    this.dataService.getClosingan(this.id).subscribe(res => {
       this.closing = res;
     });
   }
 
-  ngOnInit() {
+  gantiStatus(id: string, stat: string) {
+    this.dataService.updateClosing(id, {status: stat});
   }
 
 }

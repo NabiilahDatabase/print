@@ -27,7 +27,7 @@ export class LabelComponent implements OnInit {
   print() {
     window.print();
     this.closing.forEach(data => {
-      this.dataService.updateClosing(data.id, {status: 'Diprint'});
+      this.dataService.updateClosing(data.id, {status: 'Diprint', wktDiprint: this.dataService.getTimeNow()});
     });
   }
 

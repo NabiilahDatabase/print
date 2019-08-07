@@ -11,31 +11,43 @@
 -->
 <div class="container">
 <br><br><br>
+
+<div class="input-group">
+  <input type="text" class="form-control" [(ngModel)]="id" placeholder="Masukkan ID Invoice">
+  <div class="input-group-append">
+    <button class="btn btn-secondary" type="button" (click)="cari()">
+      <i class="fa fa-search"></i>
+    </button>
+  </div>
+</div>
+
 <table class="table table-hover" *ngIf="closing; else noItems">
     <thead>
       <tr>
-        <th scope="col">#ID</th>
+        <th scope="col">CS</th>
         <th scope="col">Penerima</th>
+        <th scope="col">Barang</th>
         <th scope="col">Total Mutasi</th>
         <th scope="col">Status</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of closing">
-        <th scope="row">{{ item.id }}</th>
-        <td>{{ item.penerima }}</td>
-        <td>Rp.{{ [(item.listBarang | pluck:'harga' | sum), item.ongkir*item.berat, item.diskon, item.deposit] | sum | number }}</td>
+      <tr>
+        <th scope="row">{{ closing.cs }}</th>
+        <td>{{ closing.penerima }}</td>
+        <td>{{ closing.listBarang.length }} Pcs</td>
+        <td>Rp.{{ [(closing.listBarang | pluck:'harga' | sum), closing.ongkir*closing.berat, closing.diskon, closing.deposit] | sum | number }}</td>
         <td>
           <div class="dropdown">
               <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                {{ item.status }}
+                {{ closing.status }}
               </button>
               <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-              <a class="dropdown-item" href="#">Cek Mutasi</a>
-              <a class="dropdown-item" href="#">Dibayar</a>
-              <a class="dropdown-item" href="#">Diprint</a>
-              <a class="dropdown-item" href="#">Dikirim</a>
-              <a class="dropdown-item" href="#">Resi</a>
+              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Cek Mutasi')">Cek Mutasi</a>
+              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Dibayar')">Dibayar</a>
+              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Diprint')">Diprint</a>
+              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Dikirim')">Dikirim</a>
+              <a class="dropdown-item" (click)="gantiStatus(closing.id,'Resi')">Resi</a>
             </div>
           </div>
         </td>

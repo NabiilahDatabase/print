@@ -4,19 +4,19 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { FormsModule, ReactiveFormsModule  } from '@angular/forms';
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
 import { environment } from '../environments/environment';
-
-import { MatGridListModule } from '@angular/material/grid-list';
-import { MatListModule } from '@angular/material/list';
 
 import { NgPipesModule } from 'ngx-pipes';
 import { NgxPrintModule } from 'ngx-print';
 import { LabelComponent } from './components/label/label.component';
 
 import { DataService } from './services/data.service';
+import { MaterialModule } from './material.module';
+
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { AlertModule } from 'ngx-bootstrap';
 import { MutasiComponent } from './components/mutasi/mutasi.component';
@@ -32,12 +32,13 @@ import { MutasiComponent } from './components/mutasi/mutasi.component';
     BrowserModule,
     BrowserAnimationsModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule,
     AngularFireModule,
     AngularFirestoreModule.enablePersistence(),
     AngularFireModule.initializeApp(environment.firebase),
     AlertModule.forRoot(),
-    MatGridListModule,
-    MatListModule,
+    MaterialModule,
     NgxPrintModule,
     NgPipesModule
   ],
