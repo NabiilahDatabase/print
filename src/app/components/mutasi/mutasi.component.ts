@@ -11,7 +11,7 @@ import { PopupService } from 'src/app/services/popup.service';
 export class MutasiComponent implements OnInit {
 
   task;
-  displayedColumns: string[] = ['id', 'cs', 'penerima', 'jumlah', 'total', 'status'];
+  displayedColumns: string[] = ['id', 'cs', 'penerima', 'jumlah', 'total', 'bank', 'status'];
   closing: Observable<any>;
 
   constructor(

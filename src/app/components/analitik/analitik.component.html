@@ -16,9 +16,11 @@
   </div>
 
   <div *ngIf="closing; else noItems" class="container">
+      <br><strong class="center">BARANG DIKIRIM TANGGAL {{tgl}}:</strong><br>
+    "ID INVOICE";"BARCODE";"NAMA BARANG";"WARNA";"HARGA JUAL";"CS";"CUSTOMER";"TOKO";"EKSPEDISI";"SERVICE";"BERAT";"ONGKIR";"REAL ONGKIR";"DISKON"
     <div *ngFor="let items of closing">
       <div *ngFor="let barang of items.listBarang">
-        "{{ items.id }}";"{{ barang | pluck: 'barcode' }}";"{{ barang | pluck: 'nama' }}";"{{ barang | pluck: 'warna' }}";"{{ barang | pluck: 'harga' }}";"{{ items.cs }}";"{{ items.penerima }}";"{{ barang | pluck: 'toko' }}"
+        "{{ items.id }}";"{{ barang | pluck: 'barcode' }}";"{{ barang | pluck: 'nama' }}";"{{ barang | pluck: 'warna' }}";"{{ barang | pluck: 'harga' }}";"{{ items.cs }}";"{{ items.penerima }}";"{{ barang | pluck: 'toko' }}";"{{items.ekspedisi}}";"{{items.service}}";"{{items.berat}}";"{{items.ongkir}}";"{{items.realOngkir}}";"{{items.diskon}}"
       </div>
     </div>
   </div>

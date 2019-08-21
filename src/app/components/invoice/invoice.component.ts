@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { PopupService } from 'src/app/services/popup.service';
 import { MatDialog } from '@angular/material';
@@ -31,12 +31,13 @@ export class InvoiceComponent implements OnInit {
   openDialog(): void {
     const dialogRef = this.dialog.open(ScannerComponent, {
       width: '250px',
-      data: {code: this.qrResultString}
+      data: {code: this.id}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      this.qrResultString = result;
+      console.log(result);
+      this.id = result;
+      this.cari();
     });
   }
 

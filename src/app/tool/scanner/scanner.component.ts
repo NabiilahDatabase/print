@@ -18,11 +18,12 @@ export class ScannerComponent {
     ) { }
 
   onNoClick(): void {
-    this.dialogRef.close();
+    this.dialogRef.close(this.data.code);
   }
 
   barcode(hasil: string) {
     this.data.code = hasil;
+    this.dialogRef.close(hasil);
   }
 
 }
