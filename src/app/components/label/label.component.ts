@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild } from '@angular/core';
 
 import { DataService } from '../../services/data.service';
 import { Observable } from 'rxjs';
 import { forEach } from '@angular/router/src/utils/collection';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-label',
@@ -14,6 +15,8 @@ export class LabelComponent implements OnInit {
   task;
   closing: any[];
   closing$: Observable<any>;
+
+  @ViewChild('konfirmasiModal') public konfirmasiModal: ModalDirective;
 
   constructor(private dataService: DataService) {
     this.task = this.dataService.getClosing('status', 'Dibayar').subscribe(res => {
@@ -27,6 +30,7 @@ export class LabelComponent implements OnInit {
 
   print() {
     window.print();
+    this.konfirmasiModal.show();
   }
   selesai() {
     if (confirm('Yakin sudah di print semua?')) {

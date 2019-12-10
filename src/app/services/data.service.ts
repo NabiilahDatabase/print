@@ -22,6 +22,21 @@ export interface Closing {
   status: string;
   switch: boolean;
 }
+
+export interface Orderan {
+  id: string;
+  barang: string;
+  barcode: string;
+  cs: string;
+  date: string;
+  hargaBeli: number;
+  penerima: string;
+  pj: string;
+  status: string;
+  toko: string;
+  warna: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -30,8 +45,16 @@ export class DataService {
   closing$: Observable<any>;
   mutasiFilter$: BehaviorSubject<string|null>;
 
+  orderan$: Observable<any>;
+  filterOrderanTgl$: BehaviorSubject<string|null>;
+
+  tahun = new Date().getFullYear().toString();
+  bulan = ('0' + (new Date().getMonth() + 1)).slice(-2);
+  hari = ('0' + (new Date().getDate())).slice(-2);
+
   constructor(public db: AngularFirestore) {
     this.mutasiFilter$ = new BehaviorSubject(null);
+    this.filterOrderanTgl$ = new BehaviorSubject(null);
     /*
     this.closing$ = db.collection('closing').snapshotChanges().pipe(
       map(actions => {
@@ -69,17 +92,38 @@ export class DataService {
     );
     return this.closing$;
   }
-
   getClosingan(iid: string) {
     return this.db.collection('closing').doc(iid).valueChanges();
   }
-
   updateClosing(id: string, data) {
     this.db.collection('closing').doc(id).update(data);
   }
-
   deleteClosing(id: string) {
     this.db.collection('closing').doc(id).delete();
+  }
+
+  getOrderan(YYYYMMDD: string) {
+    this.filterOrderanTgl$.next(YYYYMMDD);
+    this.orderan$ = combineLatest([
+      this.filterOrderanTgl$
+      ]).pipe(
+      switchMap(([tgl]) =>
+        this.db.collection('orderan', ref => {
+          let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+          if (tgl) { query = query.where('date', '==', tgl); }
+          return query;
+        }).snapshotChanges().pipe(
+          map(actions => {
+            return actions.map(a => {
+              const data = a.payload.doc.data();
+              const id = a.payload.doc.id;
+              return { id, ...data };
+            });
+          })
+        )
+      )
+    );
+    return this.orderan$;
   }
 
   getTimeNow() {

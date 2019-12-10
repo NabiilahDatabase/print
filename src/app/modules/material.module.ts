@@ -11,6 +11,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCardModule } from '@angular/material/card';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   imports: [
@@ -28,6 +33,11 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatNativeDateModule,
     MatMomentDateModule,
     MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatSortModule,
   ],
   exports: [
     MatTableModule,
@@ -44,6 +54,11 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     MatNativeDateModule,
     MatMomentDateModule,
     MatInputModule,
+    MatIconModule,
+    MatCardModule,
+    MatToolbarModule,
+    MatMenuModule,
+    MatSortModule,
   ]
 })
 

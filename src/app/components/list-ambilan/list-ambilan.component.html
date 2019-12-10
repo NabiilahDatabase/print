@@ -1,0 +1,62 @@
+<br><br><br>
+
+<div class="container">
+
+  <mat-card *ngIf="orderanSorted">
+    <mat-card-header>
+      <mat-card-title>
+        List Ambilan {{hari}}/{{bulan}}/{{tahun}}
+        <mat-chip-list style="display: inline-flex;">
+          <mat-chip color="primary" selected>{{orderanSorted.length}}pc</mat-chip>
+          <mat-chip color="accent" selected>Rp.{{estimasi | number}}</mat-chip>
+        </mat-chip-list>
+      </mat-card-title>
+      <mat-card-subtitle>
+        Total ada <strong>{{orderanSorted.length}}</strong>pc barang ambilan,
+        dan estimasi pengeluaran <strong>Rp.{{estimasi | number}}</strong>
+      </mat-card-subtitle>
+      <div class="button-row">
+        <button mat-button>
+          <mat-icon>assignment_turned_in</mat-icon>&nbsp;PRINT NOTA
+        </button>
+        <button mat-button (click)="printLabel()">
+          <mat-icon>print</mat-icon>&nbsp;PRINT LABEL
+        </button>
+      </div>
+    </mat-card-header>
+    <mat-card-content>
+      <table matSort (matSortChange)="sortData($event)" style="width: 100%">
+          <tr>
+            <th>No</th>
+            <th mat-sort-header="barang">NAMA BARANG</th>
+            <th mat-sort-header="warna">WARNA</th>
+            <th mat-sort-header="cs">CS</th>
+            <th mat-sort-header="penerima">CUSTOMER</th>
+            <th mat-sort-header="toko">TOKO</th>
+            <th mat-sort-header="hargaBeli">HARGA BELI</th>
+            <th mat-sort-header="barcode">BARCODE</th>
+            <th mat-sort-header="status">STATUS</th>
+          </tr>
+          <tr *ngFor="let orderan of orderanSorted; let i = index">
+            <td>{{i+1}}</td>
+            <td>{{orderan.barang}}</td>
+            <td>{{orderan.warna}}</td>
+            <td style="text-align: center">{{orderan.cs}}</td>
+            <td>{{orderan.penerima}}</td>
+            <td>{{orderan.toko}}</td>
+            <td style="text-align: right">Rp.{{orderan.hargaBeli | number}}</td>
+            <td><a href="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{orderan.barcode}}" target="_blank">{{orderan.barcode}}</a></td>
+            <td>
+              <span *ngIf="orderan.status=='export'">{{orderan.status | uppercase}}</span>
+              <span *ngIf="orderan.status=='diambil'" style="color: rgb(0, 179, 0)"><strong>{{orderan.status | uppercase}}</strong></span>
+              <span *ngIf="orderan.status=='kosong'" style="color: red"><strong>{{orderan.status | uppercase}}</strong></span>
+              <span *ngIf="orderan.status=='fullkeep'" style="color: orange"><strong>{{orderan.status | uppercase}}</strong></span>
+            </td>
+          </tr>
+      </table>
+    </mat-card-content>
+  </mat-card>
+
+  <br>
+
+</div>

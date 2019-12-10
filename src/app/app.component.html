@@ -1,4 +1,45 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
+<mat-toolbar id="no-print" color="primary" class="fixed-header">
+  <mat-toolbar-row>
+    <span><strong>NABIILAH</strong>STORE</span>
+
+    <span class="menu-spacer"></span>
+    <button mat-button [matMenuTriggerFor]="invoiceMenu">
+      <mat-icon>account_balance_wallet</mat-icon>&nbsp;Invoice
+    </button>
+    <mat-menu #invoiceMenu="matMenu">
+      <button mat-menu-item routerLink="/mutasi">
+        <mat-icon color="primary">verified_user</mat-icon>
+        <span>Cek Mutasi</span>
+      </button>
+      <button mat-menu-item routerLink="/print">
+        <mat-icon color="primary">print</mat-icon>
+        <span>Print Label</span>
+      </button>
+      <button mat-menu-item routerLink="/invoice">
+        <mat-icon color="primary">ballot</mat-icon>
+        <span>Kelola Invoice</span>
+      </button>
+    </mat-menu>
+
+    <button mat-button [matMenuTriggerFor]="ambilanMenu">
+      <mat-icon>local_shipping</mat-icon>&nbsp;Ambilan
+    </button>
+    <mat-menu #ambilanMenu="matMenu">
+      <button mat-menu-item routerLink="/list-ambilan">
+        <mat-icon color="primary">assignment</mat-icon>
+        <span>List Ambilan</span>
+      </button>
+      <!-- <button mat-menu-item routerLink="/print-ambilan">
+        <mat-icon color="primary">label</mat-icon>
+        <span>Print Ambilan</span>
+      </button> -->
+    </mat-menu>
+    <!-- <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon> -->
+  </mat-toolbar-row>
+</mat-toolbar>
+
+<!-- <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href=""><strong>NABIILAH</strong>STORE</a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -21,6 +62,6 @@
         <button (click)="cek=false" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>
-  </nav>
+</nav> -->
 
 <router-outlet></router-outlet>

@@ -17,13 +17,16 @@ import { LabelComponent } from './components/label/label.component';
 
 import { DataService } from './services/data.service';
 import { MaterialModule } from './modules/material.module';
+import { CovalentModule } from './modules/covalent.module';
 
 import { InvoiceComponent } from './components/invoice/invoice.component';
 import { AlertModule } from 'ngx-bootstrap';
+import { ModalModule } from 'ngx-bootstrap/modal';
 import { MutasiComponent } from './components/mutasi/mutasi.component';
 import { AnalitikComponent } from './components/analitik/analitik.component';
-
 import { ScannerComponent } from './tool/scanner/scanner.component';
+import { ListAmbilanComponent } from './components/list-ambilan/list-ambilan.component';
+import { PrintAmbilanComponent } from './components/print-ambilan/print-ambilan.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +35,9 @@ import { ScannerComponent } from './tool/scanner/scanner.component';
     InvoiceComponent,
     MutasiComponent,
     AnalitikComponent,
-    ScannerComponent
+    ScannerComponent,
+    ListAmbilanComponent,
+    PrintAmbilanComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +49,9 @@ import { ScannerComponent } from './tool/scanner/scanner.component';
     AngularFirestoreModule.enablePersistence(),
     AngularFireModule.initializeApp(environment.firebase),
     AlertModule.forRoot(),
+    ModalModule.forRoot(),
     MaterialModule,
+    CovalentModule,
     NgxPrintModule,
     NgPipesModule,
     ZXingScannerModule,

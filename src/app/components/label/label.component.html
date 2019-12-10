@@ -6,8 +6,27 @@
 
 <div id="no-print" class="text-center">
   <br><br><br>
-    <button class="btn btn-info" (click)="print()"><span class="fa fa-print"></span> PRINT</button>
-    <button class="btn btn-success" (click)="selesai()"><span class="fa fa-check-square-o"></span> SELESAI PRINT</button>
+    <button class="btn btn-info" (click)="print()"><span class="fa fa-print"></span>&nbsp;PRINT</button>
+    <button class="btn btn-success" (click)="selesai()"><span class="fa fa-check-square-o"></span>&nbsp;SELESAI PRINT</button>
+</div>
+
+<div id="no-print">
+  <div bsModal #konfirmasiModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Tunggu sampai print selesai</h4>
+        </div>
+        <div class="modal-body">
+          <p>Apakah semuanya sudah sukses di print?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="konfirmasiModal.hide()">Belum</button>
+          <button type="button" class="btn btn-primary" (click)="selesai()">Sudah</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
 </div>
 
 <div id="print-label" *ngIf="closing; else noItems">

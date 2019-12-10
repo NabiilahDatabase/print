@@ -11,6 +11,12 @@
   }
 }
 
+@media (min-width: 576px) {
+  .modal-sm {
+      max-width: 500px !important;
+  }
+}
+
 .labelprint {
   border: 1px solid black;
   margin: 10px;
