@@ -4,8 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve -o",
-    "build": "ng build --prod --aot --buildOptimizer --commonChunk --vendorChunk --optimization --progress",
-    "deploy": "ng build --prod --aot --buildOptimizer --commonChunk --vendorChunk --optimization --progress && firebase deploy --only hosting:nabiilah-closing",
+    "build": "ng build --prod --aot --buildOptimizer --commonChunk --vendorChunk --optimization --progress && \u0007\u0007\u0007\u0007\u0007",
+    "deploy": "ng build --prod --aot --buildOptimizer --commonChunk --vendorChunk --optimization --progress && firebase deploy --only hosting:nabiilah-closing && \u0007\u0007\u0007\u0007\u0007",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

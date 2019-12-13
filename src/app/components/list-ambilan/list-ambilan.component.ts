@@ -6,6 +6,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
 import { PopupService } from 'src/app/services/popup.service';
+import { FormControl } from '@angular/forms';
+import * as moment from 'moment';
 
 export interface Dessert {
   calories: number;
@@ -26,6 +28,7 @@ export class ListAmbilanComponent implements OnInit {
   orderanSorted: Orderan[];
   estimasi = 0;
 
+  date = new FormControl(moment());
   tahun = new Date().getFullYear().toString();
   bulan = ('0' + (new Date().getMonth() + 1)).slice(-2);
   hari = ('0' + (new Date().getDate())).slice(-2);
@@ -43,6 +46,17 @@ export class ListAmbilanComponent implements OnInit {
   }
 
   ngOnInit() {
+  }
+
+  gantiTgl(event) {
+    this.tahun = event.value._i.year.toString();
+    this.bulan = (event.value._i.month + 1).toString();
+    this.hari = event.value._i.date.toString();
+    this.task = this.data.getOrderan(this.tahun + this.bulan + this.hari).subscribe(res => {
+      this.orderan = res;
+      this.hitungEstimasi(res);
+      this.orderanSorted = res.slice();
+    });
   }
 
   printLabel() {

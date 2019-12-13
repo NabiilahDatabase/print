@@ -21,3 +21,7 @@ table tr th {
 .mat-sort-header-arrow {
   color: white !important;
 }
+
+.mat-form-field-appearance-legacy .mat-form-field-infix {
+  visibility: hidden;
+}

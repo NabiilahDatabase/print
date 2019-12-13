@@ -6,6 +6,11 @@
     <mat-card-header>
       <mat-card-title>
         List Ambilan {{hari}}/{{bulan}}/{{tahun}}
+        <mat-form-field style="width: 30px">
+          <input matInput [matDatepicker]="dp3" [value]="date" disabled (dateChange)="gantiTgl($event)">
+          <mat-datepicker-toggle matSuffix [for]="dp3"></mat-datepicker-toggle>
+          <mat-datepicker #dp3 disabled="false"></mat-datepicker>
+        </mat-form-field>&nbsp;&nbsp;
         <mat-chip-list style="display: inline-flex;">
           <mat-chip color="primary" selected>{{orderanSorted.length}}pc</mat-chip>
           <mat-chip color="accent" selected>Rp.{{estimasi | number}}</mat-chip>
@@ -45,7 +50,7 @@
             <td style="text-align: center">{{orderan.cs}}</td>
             <td>{{orderan.penerima}}</td>
             <td>{{orderan.toko}}</td>
-            <td style="text-align: right">Rp.{{orderan.hargaBeli | number}}</td>
+            <td style="text-align: right">{{orderan.hargaBeli}}</td>
             <td><a href="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{orderan.barcode}}" target="_blank">LIHAT</a></td>
             <td>
               <span *ngIf="orderan.status=='export'">{{orderan.status | uppercase}}</span>
