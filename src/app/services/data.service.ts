@@ -125,6 +125,9 @@ export class DataService {
     );
     return this.orderan$;
   }
+  deleteOrderan(id: string) {
+    this.db.collection('orderan').doc(id).delete();
+  }
 
   getTimeNow() {
     return moment().toDate().getTime();

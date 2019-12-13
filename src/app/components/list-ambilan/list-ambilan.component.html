@@ -2,7 +2,7 @@
 
 <div class="container">
 
-  <mat-card *ngIf="orderanSorted">
+  <mat-card *ngIf="orderanSorted | groupBy:'toko' as group">
     <mat-card-header>
       <mat-card-title>
         List Ambilan {{hari}}/{{bulan}}/{{tahun}}
@@ -16,7 +16,7 @@
         dan estimasi pengeluaran <strong>Rp.{{estimasi | number}}</strong>
       </mat-card-subtitle>
       <div class="button-row">
-        <button mat-button>
+        <button mat-button (click)="printNota(group)">
           <mat-icon>assignment_turned_in</mat-icon>&nbsp;PRINT NOTA
         </button>
         <button mat-button (click)="printLabel()">
@@ -27,15 +27,16 @@
     <mat-card-content>
       <table matSort (matSortChange)="sortData($event)" style="width: 100%">
           <tr>
-            <th>No</th>
+            <th>*</th>
             <th mat-sort-header="barang">NAMA BARANG</th>
             <th mat-sort-header="warna">WARNA</th>
             <th mat-sort-header="cs">CS</th>
             <th mat-sort-header="penerima">CUSTOMER</th>
             <th mat-sort-header="toko">TOKO</th>
-            <th mat-sort-header="hargaBeli">HARGA BELI</th>
-            <th mat-sort-header="barcode">BARCODE</th>
+            <th mat-sort-header="hargaBeli">BELI</th>
+            <th mat-sort-header="barcode">QR</th>
             <th mat-sort-header="status">STATUS</th>
+            <th>MENU</th>
           </tr>
           <tr *ngFor="let orderan of orderanSorted; let i = index">
             <td>{{i+1}}</td>
@@ -45,12 +46,17 @@
             <td>{{orderan.penerima}}</td>
             <td>{{orderan.toko}}</td>
             <td style="text-align: right">Rp.{{orderan.hargaBeli | number}}</td>
-            <td><a href="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{orderan.barcode}}" target="_blank">{{orderan.barcode}}</a></td>
+            <td><a href="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{orderan.barcode}}" target="_blank">LIHAT</a></td>
             <td>
               <span *ngIf="orderan.status=='export'">{{orderan.status | uppercase}}</span>
               <span *ngIf="orderan.status=='diambil'" style="color: rgb(0, 179, 0)"><strong>{{orderan.status | uppercase}}</strong></span>
               <span *ngIf="orderan.status=='kosong'" style="color: red"><strong>{{orderan.status | uppercase}}</strong></span>
               <span *ngIf="orderan.status=='fullkeep'" style="color: orange"><strong>{{orderan.status | uppercase}}</strong></span>
+            </td>
+            <td>
+              <button mat-icon-button color="warn" (click)="hapus(orderan)">
+                <mat-icon>delete</mat-icon>
+              </button>
             </td>
           </tr>
       </table>

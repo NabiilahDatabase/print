@@ -18,6 +18,7 @@ export class PdfService {
     pdfMake.createPdf(data).download(pdfName);
   }
 
+  // PRINT PDF LABEL
   printPDFLabel(orderan: Orderan[]) {
     const orderanTmp = orderan.map(x => ({ ...x, null: false }));
     const dataLabel = [];
@@ -85,5 +86,111 @@ export class PdfService {
       ];
     }
   }
+  // PRINT PDF LABEL
+
+  // PRINT PDF NOTA
+  printPDFNota(orderan) {
+    const orderanGroup = [];
+    for (const key in orderan) { // reorder data {LTS: value[]} => [ {key: 'LTS', value: []}, ... ]
+      if (orderan.hasOwnProperty(key)) {
+        orderanGroup.push({key, value: orderan[key]});
+      }
+    }
+    const groupBlock = [];
+    while (orderanGroup.length) { groupBlock.push(orderanGroup.splice(0, 2)); } // split menjadi 2 blok
+
+    const newBlock = groupBlock.map(blokNota => (
+      {
+        pageBreak: 'after',
+        style: 'tableExample',
+        table: {
+          widths: ['*', '*'],
+          body: [
+                  [
+                    {
+                    border: [false, false, false, false],
+                      style: 'tableExample',
+                      table: {
+                        widths: [20, '*', 17, 60, 25],
+                        body: this.buatNota(blokNota[0])
+                      }
+                    },
+                    {
+                    border: [false, false, false, false],
+                      style: 'tableExample',
+                      table: {
+                        widths: [20, '*', 17, 60, 25],
+                        body: this.buatNota(blokNota[1])
+                      }
+                    }
+                  ]
+                ]
+        }
+      }
+    ));
+    console.log(newBlock);
+    const pdfRaw = {
+      pageSize: 'A4',
+      pageOrientation: 'landscape',
+      pageMargins: [ 10, 5, 10, 5 ],
+      styles: {
+        subheader: {
+          fontSize: 12,
+          bold: true,
+          margin: [0, 0, 0, 0]
+        },
+        tableExample: {
+          margin: [5, 5, 5, 5],
+          fontSize: 10
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 10,
+          color: 'black'
+        }
+      },
+      content: newBlock
+    };
+    this.generatePdf(pdfRaw, `Nota_Ambilan_${moment(moment().toDate().getTime()).format('YYYY-MM-DD')}`);
+  }
+  buatNota(blokNota) {
+    const nota = [];
+    const title = [
+      {text: blokNota.key, style: 'subheader', colSpan: '5', alignment: 'center'},
+      {}, {}, {}, {},
+    ];
+    const header = [
+      {text: 'NO', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'BARANG', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'CS', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'HARGA', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'CEK', style: 'tableHeader', fillColor: '#dddddd'},
+    ];
+    nota.push(title);
+    nota.push(header);
+    blokNota.value.forEach((item, i) => {
+      const list = [
+        {text: i + 1, alignment: 'center'},
+        item.barang + ' ' + item.warna,
+        {text: item.cs, alignment: 'center'},
+            '', '',
+      ];
+      nota.push(list);
+    });
+    nota.push([
+      {text: 'SUBTOTAL', style: 'tableHeader', colSpan: '3', alignment: 'right', fillColor: '#dddddd'},
+      {}, {}, {text: '', colSpan: '2', fillColor: '#dddddd'}, {},
+    ]);
+    nota.push([
+      {text: 'DISKON', style: 'tableHeader', colSpan: '3', alignment: 'right', fillColor: '#dddddd'},
+      {}, {}, {text: '', colSpan: '2'}, {},
+    ]);
+    nota.push([
+      {text: 'TOTAL', style: 'tableHeader', colSpan: '3', alignment: 'right', fillColor: '#dddddd'},
+      {}, {}, {text: '', colSpan: '2', fillColor: '#dddddd'}, {},
+    ]);
+    return nota;
+  }
+  // PRINT PDF NOTA
 
 }

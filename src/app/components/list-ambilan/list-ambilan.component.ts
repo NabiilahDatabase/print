@@ -5,6 +5,7 @@ import { PdfService } from 'src/app/services/pdf.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
+import { PopupService } from 'src/app/services/popup.service';
 
 export interface Dessert {
   calories: number;
@@ -32,6 +33,7 @@ export class ListAmbilanComponent implements OnInit {
   constructor(
     private pdf: PdfService,
     private data: DataService,
+    private popup: PopupService,
   ) {
     this.task = this.data.getOrderan(this.tahun + this.bulan + this.hari).subscribe(res => {
       this.orderan = res;
@@ -44,7 +46,10 @@ export class ListAmbilanComponent implements OnInit {
   }
 
   printLabel() {
-    this.pdf.printPDFLabel(this.orderan);
+    this.pdf.printPDFLabel(this.orderanSorted);
+  }
+  printNota(orderanGroup) {
+    this.pdf.printPDFNota(orderanGroup);
   }
 
   sortData(sort: Sort) {
@@ -74,6 +79,13 @@ export class ListAmbilanComponent implements OnInit {
     res.forEach(o => {
       this.estimasi += o.hargaBeli;
     });
+  }
+
+  hapus(orderan: Orderan) {
+    if (confirm(`Hapus <strong>${orderan.barang} ${orderan.warna}</strong> milik admin ${orderan.cs}?`)) {
+      this.data.deleteOrderan(orderan.id);
+      this.popup.showToast('Ambilan milik ' + orderan.penerima + ' berhasil dihapus', 'Tutup');
+    }
   }
 
   onDestroy() {
