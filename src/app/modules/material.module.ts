@@ -16,6 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatSortModule } from '@angular/material/sort';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @NgModule({
   imports: [
@@ -38,6 +39,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatToolbarModule,
     MatMenuModule,
     MatSortModule,
+    MatSlideToggleModule,
   ],
   exports: [
     MatTableModule,
@@ -59,6 +61,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatToolbarModule,
     MatMenuModule,
     MatSortModule,
+    MatSlideToggleModule,
   ]
 })
 

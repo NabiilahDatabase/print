@@ -21,11 +21,18 @@
         dan estimasi pengeluaran <strong>Rp.{{estimasi | number}}</strong>
       </mat-card-subtitle>
       <div class="button-row">
+        <section style="display: table-caption;
+        border: 1px #b9b3b3 solid;
+        border-radius: 5px;">
+          <mat-slide-toggle style="padding: 5px 0 0 20px;" color="warn" [checked]="printRumah">
+            Rumah
+          </mat-slide-toggle>
+          <button mat-button (click)="printLabel()">
+            <mat-icon>print</mat-icon>&nbsp;PRINT LABEL
+          </button>
+        </section>
         <button mat-button (click)="printNota(group)">
           <mat-icon>assignment_turned_in</mat-icon>&nbsp;PRINT NOTA
-        </button>
-        <button mat-button (click)="printLabel()">
-          <mat-icon>print</mat-icon>&nbsp;PRINT LABEL
         </button>
       </div>
     </mat-card-header>

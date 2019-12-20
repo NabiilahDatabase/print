@@ -28,6 +28,8 @@ export class ListAmbilanComponent implements OnInit {
   orderanSorted: Orderan[];
   estimasi = 0;
 
+  printRumah = false;
+
   date = new FormControl(moment());
   tahun = new Date().getFullYear().toString();
   bulan = ('0' + (new Date().getMonth() + 1)).slice(-2);
@@ -60,7 +62,7 @@ export class ListAmbilanComponent implements OnInit {
   }
 
   printLabel() {
-    this.pdf.printPDFLabel(this.orderanSorted);
+    this.pdf.printPDFLabel(this.orderanSorted, this.printRumah);
   }
   printNota(orderanGroup) {
     this.pdf.printPDFNota(orderanGroup);
