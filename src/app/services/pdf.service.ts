@@ -6,12 +6,33 @@ import pdfFonts from 'pdfmake/build/vfs_fonts';
 import * as moment from 'moment';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
+const options = [
+  {
+    name: 'GOLDEN COCK',
+    labelCode: '105',
+    labelSize: '25x38 mm',
+    widths: [ 104, 104, 104, 104, 104 ], // panjang tiap label + margin
+    heights: [ 73, 73, 73, 73, 73 ], // tinggi tiap label + margin
+    csFont: 12,
+  },
+  {
+    name: 'BENG YU',
+    labelCode: '105',
+    labelSize: '24x37 mm',
+    widths: [ 100, 100, 100, 100, 100 ], // panjang tiap label + margin
+    heights: [ 66, 66, 66, 66, 66 ], // tinggi tiap label + margin
+    csFont: 8,
+  }
+];
+let labelOptions = options[0];
+
 @Injectable({
   providedIn: 'root'
 })
 export class PdfService {
 
   constructor() {
+    labelOptions = options[1];
   }
 
   generatePdf(data, pdfName?: string) {
@@ -21,9 +42,10 @@ export class PdfService {
   // PRINT PDF LABEL
   printPDFLabel(orderan: Orderan[], printRumah?: boolean) {
     const orderanRumah = orderan.filter(data => data.toko === 'RUMAH');
-    const orderanTmp = orderan.filter(data => data.toko !== 'RUMAH'); // exclude RUMAH
+    let orderanTmp = orderan.filter(data => data.toko !== 'RUMAH'); // exclude RUMAH
     if (printRumah) {
-      orderanTmp.concat(orderanRumah); // push RUMAH
+      orderanTmp = orderanTmp.concat(orderanRumah); // push RUMAH
+      console.log(orderanTmp);
     }
     orderanTmp.map(x => ({ ...x, null: false }));
     const dataLabel = [];
@@ -35,8 +57,8 @@ export class PdfService {
         {
           layout: { defaultBorder: false },
           table: {
-            widths: [ 104, 104, 104, 104, 104 ], // panjang tiap label
-            heights: [ 73, 73, 73, 73, 73 ], // tinggi tiap label
+            widths: labelOptions.widths, // panjang tiap label
+            heights: labelOptions.heights, // tinggi tiap label
             body: this.buatBlokLabel(blockLabel)
           },
           pageBreak: 'after'
@@ -81,22 +103,27 @@ export class PdfService {
           [
             { text: label.penerima, colSpan: 2, fontSize: 5, bold: true },
             {},
-            { text: label.cs, fontSize: 12, bold: true, border: [ true, true, false, false ], alignment: 'center' }
+            { text: label.cs, fontSize: labelOptions.csFont, bold: true, border: [ true, true, false, false ], alignment: 'center' }
           ]
         ];
       } else { // special label for RUMAH
-        const data = label.barcode + ';' + label.cs + ';' + label.penerima;
+        const data = label.barcode + '=' + label.cs + '=' + label.penerima.split(' ')[0];
         return [
           [
             { qr: data, rowSpan: 2, fit: '70' },
-            { text: label.toko, colSpan: 2, fontSize: 5 },
-            {}
-          ],
-          [{}, { text: label.barang + ' ' + label.warna, colSpan: 2, fontSize: 5, border: [ false, true, false, false ] }, {}],
-          [
-            { text: label.penerima, colSpan: 2, fontSize: 5, bold: true },
             {},
-            { text: label.cs, fontSize: 12, bold: true, border: [ true, true, false, false ], alignment: 'center' }
+            { text: '  ' + label.cs, fontSize: 5, bold: true }
+          ],
+          [
+            {},
+            {},
+            // tslint:disable-next-line: max-line-length
+            { text: '  ' + label.barang + ' ' + label.warna + '\n\n  ' + label.penerima, fontSize: 5, border: [ false, true, false, false ] }
+          ],
+          [
+            {},
+            {},
+            {}
           ]
         ];
       }

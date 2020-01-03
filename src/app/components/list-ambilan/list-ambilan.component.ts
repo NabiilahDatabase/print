@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import { Orderan, DataService } from 'src/app/services/data.service';
 import { PdfService } from 'src/app/services/pdf.service';
 
@@ -28,7 +28,7 @@ export class ListAmbilanComponent implements OnInit {
   orderanSorted: Orderan[];
   estimasi = 0;
 
-  printRumah = false;
+  @Input() printRumah: boolean;
 
   date = new FormControl(moment());
   tahun = new Date().getFullYear().toString();
@@ -45,6 +45,7 @@ export class ListAmbilanComponent implements OnInit {
       this.hitungEstimasi(res);
       this.orderanSorted = res.slice();
     });
+    this.printRumah = true;
   }
 
   ngOnInit() {

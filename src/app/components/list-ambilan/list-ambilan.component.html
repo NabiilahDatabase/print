@@ -24,7 +24,7 @@
         <section style="display: table-caption;
         border: 1px #b9b3b3 solid;
         border-radius: 5px;">
-          <mat-slide-toggle style="padding: 5px 0 0 20px;" color="warn" [checked]="printRumah">
+          <mat-slide-toggle style="padding: 5px 0 0 20px;" color="warn" (change)="printRumah=!printRumah" [checked]="printRumah">
             Rumah
           </mat-slide-toggle>
           <button mat-button (click)="printLabel()">
