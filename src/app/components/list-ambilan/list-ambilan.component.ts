@@ -53,8 +53,9 @@ export class ListAmbilanComponent implements OnInit {
 
   gantiTgl(event) {
     this.tahun = event.value._i.year.toString();
-    this.bulan = (event.value._i.month + 1).toString();
-    this.hari = event.value._i.date.toString();
+    this.bulan = ('0' + (event.value._i.month + 1)).slice(-2).toString();
+    this.hari = ('0' + event.value._i.date).slice(-2).toString();
+    console.log(this.tahun, this.bulan, this.hari);
     this.task = this.data.getOrderan(this.tahun + this.bulan + this.hari).subscribe(res => {
       this.orderan = res;
       this.hitungEstimasi(res);
