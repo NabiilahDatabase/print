@@ -24,15 +24,25 @@ const options = [
     csFont: 8,
   }
 ];
-let labelOptions = options[0];
 
 @Injectable({
   providedIn: 'root'
 })
 export class PdfService {
 
+  labelOptions = options[0];
+
   constructor() {
-    labelOptions = options[1];
+    this.labelOptions = options[1];
+  }
+
+  getOptions(index?: number | null) {
+    if (index >= 0) {
+      return options[index];
+    } else { return options; }
+  }
+  setOptions(index) {
+    this.labelOptions = options[index];
   }
 
   generatePdf(data, pdfName?: string) {
@@ -40,13 +50,15 @@ export class PdfService {
   }
 
   // PRINT PDF LABEL
-  printPDFLabel(orderan: Orderan[], printRumah?: boolean) {
+  printPDFLabel(orderan: Orderan[], option?: {printRumah: boolean, labelMerk: number}) {
     const orderanRumah = orderan.filter(data => data.toko === 'RUMAH');
-    let orderanTmp = orderan.filter(data => data.toko !== 'RUMAH'); // exclude RUMAH
-    if (printRumah) {
+    let orderanTmp = orderan
+      .filter(data => data.toko !== 'RUMAH') // exclude RUMAH
+      .sort((a, b) => (a.toko > b.toko) ? 1 : ((b.toko > a.toko) ? -1 : 0)); // sort data per toko
+    if (option.printRumah) {
       orderanTmp = orderanTmp.concat(orderanRumah); // push RUMAH
-      console.log(orderanTmp);
     }
+    this.setOptions(option.labelMerk);
     orderanTmp.map(x => ({ ...x, null: false }));
     const dataLabel = [];
     while (orderanTmp.length) { dataLabel.push(this.refillArray(orderanTmp.splice(0, 30), 30)); }
@@ -57,8 +69,8 @@ export class PdfService {
         {
           layout: { defaultBorder: false },
           table: {
-            widths: labelOptions.widths, // panjang tiap label
-            heights: labelOptions.heights, // tinggi tiap label
+            widths: this.labelOptions.widths, // panjang tiap label
+            heights: this.labelOptions.heights, // tinggi tiap label
             body: this.buatBlokLabel(blockLabel)
           },
           pageBreak: 'after'
@@ -103,7 +115,7 @@ export class PdfService {
           [
             { text: label.penerima, colSpan: 2, fontSize: 5, bold: true },
             {},
-            { text: label.cs, fontSize: labelOptions.csFont, bold: true, border: [ true, true, false, false ], alignment: 'center' }
+            { text: label.cs, fontSize: this.labelOptions.csFont, bold: true, border: [ true, true, false, false ], alignment: 'center' }
           ]
         ];
       } else { // special label for RUMAH
@@ -112,7 +124,7 @@ export class PdfService {
           [
             { qr: data, rowSpan: 2, fit: '70' },
             {},
-            { text: '  ' + label.cs, fontSize: 5, bold: true }
+            { text: '  ' + label.cs + ' | ' + label.date, fontSize: 5, bold: true }
           ],
           [
             {},
@@ -139,7 +151,7 @@ export class PdfService {
 
   // PRINT PDF NOTA
   printPDFNota(orderan) {
-    let orderanGroup = [];
+    const orderanGroup = [];
     for (const key in orderan) { // reorder data {LTS: value[]} => [ {key: 'LTS', value: []}, ... ]
       if (orderan.hasOwnProperty(key)) {
         if (key !== 'RUMAH') { // filter data without RUMAH
@@ -148,8 +160,9 @@ export class PdfService {
       }
     }
     const groupBlock = [];
-    orderanGroup = orderanGroup.map(x => ({ ...x, null: false }));
-    while (orderanGroup.length) { groupBlock.push(this.refillArray(orderanGroup.splice(0, 2), 2)); } // split menjadi 2 blok
+    const orderanGroup2 = orderanGroup.sort((a, b) => (a.key > b.key) ? 1 : ((b.key > a.key) ? -1 : 0));
+    const orderanGroup3 = orderanGroup2.map(x => ({ ...x, null: false }));
+    while (orderanGroup3.length) { groupBlock.push(this.refillArray(orderanGroup3.splice(0, 2), 2)); } // split menjadi 2 blok
 
     const newBlock = groupBlock.map(blokNota => (
       {
@@ -180,6 +193,59 @@ export class PdfService {
         }
       }
     ));
+    // Buat list toko ambilan
+    const listToko = [];
+    const title = [
+      {text: 'LIST TOKO AMBILAN', style: 'subheader', colSpan: '5', alignment: 'center'},
+      {}, {}, {}, {},
+    ];
+    const header = [
+      {text: 'NO', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'NAMA TOKO', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'Pcs', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'TOTAL', style: 'tableHeader', fillColor: '#dddddd'},
+      {text: 'CEK', style: 'tableHeader', fillColor: '#dddddd'},
+    ];
+    listToko.push(title);
+    listToko.push(header);
+    orderanGroup2
+    .forEach((toko, i) => {
+      const list = [
+        {text: i + 1, alignment: 'center'},
+        toko.key,
+        {text: toko.value.length, alignment: 'center'},
+        '', '',
+      ];
+      listToko.push(list);
+    });
+
+    newBlock.push({ // Buat list toko yg diambil
+      pageBreak: 'after',
+      style: 'tableExample',
+      table: {
+        widths: ['*', '*'],
+        body: [
+                [
+                  {
+                  border: [false, false, false, false],
+                    style: 'tableExample',
+                    table: {
+                      widths: [20, '*', 17, 60, 25],
+                      body: listToko
+                    }
+                  },
+                  {
+                  border: [false, false, false, false],
+                    style: 'tableExample',
+                    table: {
+                      widths: [20, '*', 17, 60, 25],
+                      body: [ [ {}, {}, {}, {}, {}, ] ]
+                    }
+                  }
+                ]
+              ]
+      }
+    });
     const pdfRaw = {
       pageSize: 'A4',
       pageOrientation: 'landscape',

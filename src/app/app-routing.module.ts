@@ -7,7 +7,7 @@ import { MutasiComponent } from './components/mutasi/mutasi.component';
 import { AnalitikComponent } from './components/analitik/analitik.component';
 import { ScannerComponent } from './tool/scanner/scanner.component';
 import { ListAmbilanComponent } from './components/list-ambilan/list-ambilan.component';
-import { PrintAmbilanComponent } from './components/print-ambilan/print-ambilan.component';
+import { PrintGudangComponent } from './components/print-gudang/print-gudang.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'mutasi', pathMatch: 'full' },
@@ -16,7 +16,7 @@ const routes: Routes = [
   { path: 'mutasi', component: MutasiComponent },
   { path: 'analitik', component: AnalitikComponent },
   { path: 'list-ambilan', component: ListAmbilanComponent },
-  { path: 'print-ambilan', component: PrintAmbilanComponent },
+  { path: 'print-gudang', component: PrintGudangComponent },
 ];
 
 @NgModule({

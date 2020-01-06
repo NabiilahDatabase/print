@@ -29,6 +29,7 @@ export class ListAmbilanComponent implements OnInit {
   estimasi = 0;
 
   @Input() printRumah: boolean;
+  options; option; selected = -1;
 
   date = new FormControl(moment());
   tahun = new Date().getFullYear().toString();
@@ -46,9 +47,15 @@ export class ListAmbilanComponent implements OnInit {
       this.orderanSorted = res.slice();
     });
     this.printRumah = true;
+    this.options = this.pdf.getOptions();
   }
 
   ngOnInit() {
+  }
+
+  pilihLabel(name) {
+    this.selected = this.options.findIndex((data: any) => data.name === name);
+    console.log(this.selected);
   }
 
   gantiTgl(event) {
@@ -64,7 +71,7 @@ export class ListAmbilanComponent implements OnInit {
   }
 
   printLabel() {
-    this.pdf.printPDFLabel(this.orderanSorted, this.printRumah);
+    this.pdf.printPDFLabel(this.orderanSorted, {printRumah: this.printRumah, labelMerk: this.selected });
   }
   printNota(orderanGroup) {
     this.pdf.printPDFNota(orderanGroup);

@@ -81,7 +81,7 @@ export class DataService {
         }).snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {
-              const data = a.payload.doc.data();
+              const data = a.payload.doc.data() as Closing[];
               const id = a.payload.doc.id;
               const date = moment.unix(parseInt(id.split('-')[0], 10) / 1000).format('YYYYMMDD');
               return { id, date, ...data };
@@ -115,7 +115,7 @@ export class DataService {
         }).snapshotChanges().pipe(
           map(actions => {
             return actions.map(a => {
-              const data = a.payload.doc.data();
+              const data = a.payload.doc.data() as Orderan[];
               const id = a.payload.doc.id;
               return { id, ...data };
             });

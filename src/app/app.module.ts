@@ -26,7 +26,7 @@ import { MutasiComponent } from './components/mutasi/mutasi.component';
 import { AnalitikComponent } from './components/analitik/analitik.component';
 import { ScannerComponent } from './tool/scanner/scanner.component';
 import { ListAmbilanComponent } from './components/list-ambilan/list-ambilan.component';
-import { PrintAmbilanComponent } from './components/print-ambilan/print-ambilan.component';
+import { PrintGudangComponent } from './components/print-gudang/print-gudang.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +37,7 @@ import { PrintAmbilanComponent } from './components/print-ambilan/print-ambilan.
     AnalitikComponent,
     ScannerComponent,
     ListAmbilanComponent,
-    PrintAmbilanComponent
+    PrintGudangComponent
   ],
   imports: [
     BrowserModule,

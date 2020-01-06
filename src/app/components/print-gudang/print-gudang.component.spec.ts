@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PrintAmbilanComponent } from './print-ambilan.component';
+import { PrintGudangComponent } from './print-gudang.component';
 
-describe('PrintAmbilanComponent', () => {
-  let component: PrintAmbilanComponent;
-  let fixture: ComponentFixture<PrintAmbilanComponent>;
+describe('PrintGudangComponent', () => {
+  let component: PrintGudangComponent;
+  let fixture: ComponentFixture<PrintGudangComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PrintAmbilanComponent ]
+      declarations: [ PrintGudangComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(PrintAmbilanComponent);
+    fixture = TestBed.createComponent(PrintGudangComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
