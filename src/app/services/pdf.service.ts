@@ -50,50 +50,124 @@ export class PdfService {
   }
 
   // PRINT PDF LABEL
-  printPDFLabel(orderan: Orderan[], option?: {printRumah: boolean, labelMerk: number}) {
-    const orderanRumah = orderan.filter(data => data.toko === 'RUMAH');
-    let orderanTmp = orderan
-      .filter(data => data.toko !== 'RUMAH') // exclude RUMAH
-      .sort((a, b) => (a.toko > b.toko) ? 1 : ((b.toko > a.toko) ? -1 : 0)); // sort data per toko
-    if (option.printRumah) {
-      orderanTmp = orderanTmp.concat(orderanRumah); // push RUMAH
-    }
+  printPDFLabel(data: any[], fileName: string, option?: {labelMerk: number, statusPrint: string}) {
+    // console.log(option.statusPrint);
     this.setOptions(option.labelMerk);
-    orderanTmp.map(x => ({ ...x, null: false }));
-    const dataLabel = [];
-    while (orderanTmp.length) { dataLabel.push(this.refillArray(orderanTmp.splice(0, 30), 30)); }
+    data.map(x => ({ ...x, null: false, statusPrint: option.statusPrint }));
+    const dataLabel = this.split_refill(data, 30, { null: true });
+    const content = dataLabel.map((blockData) => {
+      const newArr = [];
+      while (blockData.length) { newArr.push(blockData.splice(0, 5)); }
+      const body = newArr.map((labelBlock: any[]) => {
+        return labelBlock.map(label => {
+          let labelData = [];
+
+          if (!label.null) {
+            switch (option.statusPrint) {
+              case 'ambilan': {
+                if (label.toko !== 'RUMAH') {
+                  labelData = [
+                    [
+                      { qr: label.barcode, rowSpan: 2, fit: '50' }, { text: label.toko, colSpan: 2, fontSize: 7 }, {}
+                    ],
+                    [
+                      {}, { text: label.barang + ' ' + label.warna, colSpan: 2, fontSize: 7, border: [ false, true, false, false ] }, {}
+                    ],
+                    [
+                      { text: label.penerima, colSpan: 2, fontSize: 5, bold: true },
+                      {},
+                      // tslint:disable-next-line: max-line-length
+                      { text: label.cs, fontSize: this.labelOptions.csFont, bold: true, border: [ true, true, false, false ], alignment: 'center' }
+                    ]
+                  ];
+                } else {
+                  const qr = label.barcode + '=' + label.cs + '=' + label.penerima.split(' ')[0];
+                  labelData = [
+                    [
+                      { qr, rowSpan: 2, fit: '70' }, {}, { text: '  ' + label.cs + ' | ' + label.date, fontSize: 5, bold: true }
+                    ],
+                    [ // tslint:disable-next-line: max-line-length
+                      {}, {}, { text: '  ' + label.barang + ' ' + label.warna + '\n\n  ' + label.penerima, fontSize: 5, border: [ true, true, true, true ] }
+                    ],
+                    [ {}, {}, {} ]
+                  ];
+                }
+                break;
+              }
+              case 'stock': {
+                const qr = label.id;
+                labelData = [
+                  [
+                    { qr, rowSpan: 2, fit: '50' },
+                    { text: label.toko, colSpan: 2, fontSize: 7 },
+                    {}
+                  ],
+                  // tslint:disable-next-line: max-line-length
+                  [{}, { text: label.nama + ' ' + label.warna, colSpan: 2, fontSize: 7, border: [ false, true, false, false ] }, {}],
+                  [
+                    { text: 'JUAL: ' + label.hargajual, colSpan: 2, fontSize: 5, bold: true },
+                    {},
+                    // tslint:disable-next-line: max-line-length
+                    { text: qr.split('-')[0], fontSize: 5, bold: true, border: [ true, true, false, false ], alignment: 'center' }
+                  ]
+                ];
+                break;
+              }
+            }
+          } else {
+            labelData = [
+              [ {}, {}, {} ],
+              [ {}, {}, {} ],
+              [ {}, {}, {} ]
+            ];
+          }
+
+          return {
+            margin: [0, 0, 0, 0],
+            layout: { defaultBorder: false },
+            table: {
+              widths: [40, 'auto', 'auto'],
+              body: labelData
+            }
+          };
+        });
+      });
+      const blockLabel = {
+        layout: { defaultBorder: false },
+        table: {
+          widths: this.labelOptions.widths, // panjang tiap label
+          heights: this.labelOptions.heights, // tinggi tiap label
+          body
+        },
+        pageBreak: 'after'
+      };
+      return blockLabel;
+    });
+
     const pdfRaw = {
       pageSize: 'A4',
       pageMargins: [ 3, 5, 1, 1 ],
-      content: dataLabel.map((blockLabel) => (
-        {
-          layout: { defaultBorder: false },
-          table: {
-            widths: this.labelOptions.widths, // panjang tiap label
-            heights: this.labelOptions.heights, // tinggi tiap label
-            body: this.buatBlokLabel(blockLabel)
-          },
-          pageBreak: 'after'
-        }
-      ))
+      content
     };
-    this.generatePdf(pdfRaw, `Label_Ambilan_${moment().format('YYYY-MM-DD')}`);
+
+    this.generatePdf(pdfRaw, `${fileName}_${moment().format('YYYY-MM-DD')}`);
   }
-  buatBlokLabel(blockData) {
-    const newArr = [];
-    while (blockData.length) { newArr.push(blockData.splice(0, 5)); }
-    const block = newArr.map((labelBlock: any[]) => {
-      return labelBlock.map(label => ({
-        margin: [0, 0, 0, 0],
-        layout: { defaultBorder: false },
-        table: {
-          widths: [40, 'auto', 'auto'],
-          body: this.buatLabel(label)
-        }
-      }));
-    });
-    return block;
+  split_refill(data: any[], splitLength: number, dataRefill?: any | null) {
+    const dataResult = [];
+    const dataTmp = data;
+    while (data.length) {
+      const oldArray = dataTmp.splice(0, splitLength);
+      const newArray = oldArray;
+      if (oldArray.length !== splitLength) {
+        let sisa = splitLength - oldArray.length;
+        while (sisa !== 0) { newArray.push(dataRefill); sisa--; }
+        dataResult.push(newArray);
+      } else { dataResult.push(oldArray); }
+    }
+    return dataResult;
   }
+  // PRINT PDF LABEL
+
   refillArray(array: any[], lengthArray: number) {
     const newArray = array;
     if (array.length !== lengthArray) {
@@ -102,52 +176,6 @@ export class PdfService {
       return newArray;
     } else { return array; }
   }
-  buatLabel(label) {
-    if (!label.null) {
-      if (label.toko !== 'RUMAH') {
-        return [
-          [
-            { qr: label.barcode, rowSpan: 2, fit: '50' },
-            { text: label.toko, colSpan: 2, fontSize: 7 },
-            {}
-          ],
-          [{}, { text: label.barang + ' ' + label.warna, colSpan: 2, fontSize: 7, border: [ false, true, false, false ] }, {}],
-          [
-            { text: label.penerima, colSpan: 2, fontSize: 5, bold: true },
-            {},
-            { text: label.cs, fontSize: this.labelOptions.csFont, bold: true, border: [ true, true, false, false ], alignment: 'center' }
-          ]
-        ];
-      } else { // special label for RUMAH
-        const data = label.barcode + '=' + label.cs + '=' + label.penerima.split(' ')[0];
-        return [
-          [
-            { qr: data, rowSpan: 2, fit: '70' },
-            {},
-            { text: '  ' + label.cs + ' | ' + label.date, fontSize: 5, bold: true }
-          ],
-          [
-            {},
-            {},
-            // tslint:disable-next-line: max-line-length
-            { text: '  ' + label.barang + ' ' + label.warna + '\n\n  ' + label.penerima, fontSize: 5, border: [ false, true, false, false ] }
-          ],
-          [
-            {},
-            {},
-            {}
-          ]
-        ];
-      }
-    } else {
-      return [
-        [ {}, {}, {} ],
-        [ {}, {}, {} ],
-        [ {}, {}, {} ]
-      ];
-    }
-  }
-  // PRINT PDF LABEL
 
   // PRINT PDF NOTA
   printPDFNota(orderan) {
@@ -159,9 +187,9 @@ export class PdfService {
         }
       }
     }
-    const groupBlock = [];
     const orderanGroup2 = orderanGroup.sort((a, b) => (a.key > b.key) ? 1 : ((b.key > a.key) ? -1 : 0));
     const orderanGroup3 = orderanGroup2.map(x => ({ ...x, null: false }));
+    const groupBlock = [];
     while (orderanGroup3.length) { groupBlock.push(this.refillArray(orderanGroup3.splice(0, 2), 2)); } // split menjadi 2 blok
 
     const newBlock = groupBlock.map(blokNota => (

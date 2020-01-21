@@ -18,7 +18,7 @@
       </mat-card-title>
       <mat-card-subtitle style="margin:0">
         <mat-form-field>
-          <mat-label>Pilih Merk Label Ambilan</mat-label>
+          <mat-label>Pilih Merk Label</mat-label>
           <mat-select name="option" (selectionChange)="pilihLabel(option)" [(ngModel)]="option">
             <mat-option *ngFor="let option of options; let i = index" [value]="option.name">{{option.name}}</mat-option>
           </mat-select>

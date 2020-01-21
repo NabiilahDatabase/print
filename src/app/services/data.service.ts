@@ -37,6 +37,20 @@ export interface Orderan {
   warna: string;
 }
 
+export interface Stock {
+  id: string;
+  booked: boolean;
+  hargabeli: number;
+  hargajual: number;
+  image: string;
+  nama: string;
+  printed: boolean;
+  ready: boolean;
+  statusbarang: string;
+  toko: string;
+  warna: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -127,6 +141,28 @@ export class DataService {
   }
   deleteOrderan(id: string) {
     this.db.collection('orderan').doc(id).delete();
+  }
+
+  getStockGudang(): Observable<Stock[]> {
+    return this.db.collection<Stock>('gudang', ref =>
+      ref.where('ready', '==', true).where('printed', '==', false)
+    ).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data();
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+  async updateStockDiprint(stocks: Stock[]) {
+    const batch = this.db.firestore.batch();
+    stocks.forEach(stock => {
+      const docRef = this.db.collection('gudang').doc(stock.id).ref;
+      batch.update(docRef, {printed: true});
+    });
+    return await batch.commit();
   }
 
   getTimeNow() {

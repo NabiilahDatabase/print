@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PdfService } from 'src/app/services/pdf.service';
-import { DataService } from 'src/app/services/data.service';
+import { DataService, Stock } from 'src/app/services/data.service';
 import { PopupService } from 'src/app/services/popup.service';
 import { Sort } from '@angular/material/sort';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 
 @Component({
   selector: 'app-print-gudang',
@@ -11,10 +12,12 @@ import { Sort } from '@angular/material/sort';
 })
 export class PrintGudangComponent implements OnInit {
 
-  stock;
-  StockSorted;
+  stock: Stock[]; task;
+  stockSorted: Stock[];
 
   options; option; selected = -1;
+
+  @ViewChild('konfirmasiModal') public konfirmasiModal: ModalDirective;
 
   constructor(
     private pdf: PdfService,
@@ -22,37 +25,56 @@ export class PrintGudangComponent implements OnInit {
     private popup: PopupService,
   ) {
     this.options = this.pdf.getOptions();
+    this.task = this.data.getStockGudang().subscribe(res => {
+      this.stock = res;
+      this.stockSorted = res.slice();
+      // console.log(res);
+    });
   }
 
   ngOnInit() {
   }
   pilihLabel(name) {
-    console.log(this.selected);
     this.selected = this.options.findIndex(data => data.name === name);
-    console.log(this.selected);
   }
-  printLabel() {}
+  printLabel() {
+    const stock = this.stockSorted.sort((a, b) => (a.nama > b.nama) ? 1 : ((b.nama > a.nama) ? -1 : 0));
+    this.pdf.printPDFLabel(stock, 'Label_Gudang', {labelMerk: this.selected, statusPrint: 'stock' });
+    this.stockSorted = this.stock.slice();
+    this.konfirmasiModal.show();
+  }
 
   sortData(sort: Sort) {
     const data = this.stock.slice();
     if (!sort.active || sort.direction === '') {
-      this.StockSorted = data;
+      this.stockSorted = data;
       return;
     }
-    this.StockSorted = data.sort((a, b) => {
+    this.stockSorted = data.sort((a, b) => {
       const isAsc = sort.direction === 'asc';
       switch (sort.active) {
-        case 'barang': return compare(a.barang, b.barang, isAsc);
+        case 'id': return compare(a.id, b.id, isAsc);
+        case 'nama': return compare(a.nama, b.nama, isAsc);
         case 'warna': return compare(a.warna, b.warna, isAsc);
-        case 'cs': return compare(a.cs, b.cs, isAsc);
-        case 'penerima': return compare(a.penerima, b.penerima, isAsc);
         case 'toko': return compare(a.toko, b.toko, isAsc);
-        case 'hargaBeli': return compare(a.hargaBeli, b.hargaBeli, isAsc);
-        case 'barcode': return compare(a.barcode, b.barcode, isAsc);
-        case 'status': return compare(a.status, b.status, isAsc);
+        case 'hargabeli': return compare(a.hargabeli, b.hargabeli, isAsc);
+        case 'hargajual': return compare(a.hargajual, b.hargajual, isAsc);
+        case 'statusbarang': return compare(a.statusbarang, b.statusbarang, isAsc);
         default: return 0;
       }
     });
+  }
+
+  selesai() {
+    this.data.updateStockDiprint(this.stock).then(
+      () => {
+        this.popup.showToast('Berhasil print semua label!', 'Tutup');
+        this.konfirmasiModal.hide();
+      },
+      (err) => { alert(err); }
+    );
+    // if (confirm('Yakin sudah di print semua?')) {
+    // }
   }
 
 }

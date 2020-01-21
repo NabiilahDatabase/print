@@ -46,7 +46,7 @@ export class ListAmbilanComponent implements OnInit {
       this.hitungEstimasi(res);
       this.orderanSorted = res.slice();
     });
-    this.printRumah = true;
+    this.printRumah = false;
     this.options = this.pdf.getOptions();
   }
 
@@ -71,7 +71,16 @@ export class ListAmbilanComponent implements OnInit {
   }
 
   printLabel() {
-    this.pdf.printPDFLabel(this.orderanSorted, {printRumah: this.printRumah, labelMerk: this.selected });
+    const orderanRumah = this.orderan
+      .filter(d => d.toko === 'RUMAH')
+      .sort((a, b) => (a.barang > b.barang) ? 1 : ((b.barang > a.barang) ? -1 : 0)); // sort nama barang
+    let orderanTmp = this.orderan
+      .filter(d => d.toko !== 'RUMAH') // exclude RUMAH
+      .sort((a, b) => (a.toko > b.toko) ? 1 : ((b.toko > a.toko) ? -1 : 0)); // sort data per toko
+    if (this.printRumah) {
+      orderanTmp = orderanTmp.concat(orderanRumah); // push RUMAH
+    }
+    this.pdf.printPDFLabel(orderanTmp, 'Label_Ambilan', {labelMerk: this.selected, statusPrint: 'ambilan' });
   }
   printNota(orderanGroup) {
     this.pdf.printPDFNota(orderanGroup);

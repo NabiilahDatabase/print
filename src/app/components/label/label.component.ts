@@ -33,11 +33,10 @@ export class LabelComponent implements OnInit {
     this.konfirmasiModal.show();
   }
   selesai() {
-    if (confirm('Yakin sudah di print semua?')) {
-      this.closing.forEach(data => {
-        this.dataService.updateClosing(data.id, {status: 'Diprint', wktDiprint: this.dataService.getTimeNow()});
-      });
-    }
+    this.closing.forEach(data => {
+      this.dataService.updateClosing(data.id, {status: 'Diprint', wktDiprint: this.dataService.getTimeNow()});
+    });
+    this.konfirmasiModal.hide();
   }
 
 }

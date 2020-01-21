@@ -2,68 +2,59 @@
 
 <div class="container">
 
-  <mat-card *ngIf="StockSorted | groupBy:'toko' as group">
+  <mat-card *ngIf="stockSorted | groupBy:'toko' as group">
     <mat-card-header>
       <mat-card-title style="margin:0">
-        Stock Gudang&nbsp;&nbsp;
+        List Stock Gudang&nbsp;
         <mat-chip-list style="display: inline-flex;">
-          <mat-chip color="primary" selected>{{StockSorted.length}}pc</mat-chip>
-        </mat-chip-list>
-      </mat-card-title>
-      <mat-card-subtitle style="margin:0">&nbsp;
+          <mat-chip color="primary" selected>{{stockSorted.length}}pc</mat-chip>
+        </mat-chip-list>&nbsp;&nbsp;
+        <mat-form-field style="font-size: 14px;">
+          <mat-label>Pilih Merk Label</mat-label>
+          <mat-select name="option" (selectionChange)="pilihLabel(option)" [(ngModel)]="option">
+            <mat-option *ngFor="let option of options; let i = index" [value]="option.name">{{option.name}}</mat-option>
+          </mat-select>
+        </mat-form-field>&nbsp;
         <section style="display: inline-flex;
         border: 1px #b9b3b3 solid;
         border-radius: 5px;">
-          <mat-form-field>
-            <mat-label>Pilih Merk Label</mat-label>
-            <mat-select name="option" (selectionChange)="pilihLabel(option)" [(ngModel)]="option">
-              <mat-option *ngFor="let option of options; let i = index" [value]="option.name">{{option.name}}</mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-flat-button color="warn" (click)="printLabel()" [disabled]="selected<=0">
+          <button mat-flat-button color="warn" (click)="printLabel()" [disabled]="selected<0">
             <mat-icon>print</mat-icon>&nbsp;PRINT LABEL
           </button>
         </section>
+      </mat-card-title>
+      <mat-card-subtitle style="margin:0">
       </mat-card-subtitle>
-      <div class="button-row">
-        <section style="display: table-caption;
-        border: 1px #b9b3b3 solid;
-        border-radius: 5px;">
-          <button mat-button (click)="printLabel()">
-            <mat-icon>print</mat-icon>&nbsp;PRINT LABEL
-          </button>
-        </section>
-      </div>
     </mat-card-header>
     <mat-card-content>
       <table matSort (matSortChange)="sortData($event)" style="width: 100%">
           <tr>
             <th>*</th>
-            <th mat-sort-header="barang">NAMA BARANG</th>
+            <th mat-sort-header="nama">NAMA BARANG</th>
             <th mat-sort-header="warna">WARNA</th>
-            <th mat-sort-header="cs">CS</th>
-            <th mat-sort-header="penerima">CUSTOMER</th>
             <th mat-sort-header="toko">TOKO</th>
-            <th mat-sort-header="hargaBeli">BELI</th>
-            <th mat-sort-header="barcode">QR</th>
-            <th mat-sort-header="status">STATUS</th>
+            <th mat-sort-header="hargabeli">BELI</th>
+            <th mat-sort-header="hargajual">JUAL</th>
+            <th mat-sort-header="id">ID</th>
+            <th mat-sort-header="statusbarang">STATUS</th>
             <th>MENU</th>
           </tr>
-          <tr *ngFor="let orderan of StockSorted; let i = index">
+          <tr *ngFor="let stock of stockSorted; let i = index">
             <td>{{i+1}}</td>
-            <td>{{orderan.barang}}</td>
-            <td>{{orderan.warna}}</td>
-            <td style="text-align: center">{{orderan.cs}}</td>
-            <td>{{orderan.penerima}}</td>
-            <td>{{orderan.toko}}</td>
-            <td style="text-align: right">{{orderan.hargaBeli}}</td>
-            <td><a href="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{orderan.barcode}}" target="_blank">LIHAT</a></td>
+            <td>{{stock.nama}}</td>
+            <td>{{stock.warna}}</td>
+            <td>{{stock.toko}}</td>
+            <td>{{stock.hargajual}}</td>
+            <td>{{stock.hargabeli}}</td>
+            <td>{{stock.id}}</td>
+            <td>{{stock.statusbarang}}</td>
+            <!-- <td><a href="https://chart.googleapis.com/chart?chs=150x150&cht=qr&chl={{orderan.barcode}}" target="_blank">LIHAT</a></td>
             <td>
               <span *ngIf="orderan.status=='export'">{{orderan.status | uppercase}}</span>
               <span *ngIf="orderan.status=='diambil'" style="color: rgb(0, 179, 0)"><strong>{{orderan.status | uppercase}}</strong></span>
               <span *ngIf="orderan.status=='kosong'" style="color: red"><strong>{{orderan.status | uppercase}}</strong></span>
               <span *ngIf="orderan.status=='fullkeep'" style="color: orange"><strong>{{orderan.status | uppercase}}</strong></span>
-            </td>
+            </td> -->
             <td>
               <button mat-icon-button color="warn">
                 <mat-icon>delete</mat-icon>
@@ -75,5 +66,25 @@
   </mat-card>
 
   <br>
+
+
+  <div id="no-print">
+    <div bsModal #konfirmasiModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">Tunggu sampai print selesai</h4>
+          </div>
+          <div class="modal-body">
+            <p>Apakah semuanya sudah sukses di print?</p>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="konfirmasiModal.hide()">Belum</button>
+            <button type="button" class="btn btn-primary" (click)="selesai()">Sudah</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+  </div>
 
 </div>
