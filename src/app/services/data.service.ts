@@ -4,6 +4,7 @@ import { map, switchMap } from 'rxjs/operators';
 import * as moment from 'moment';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import firebase from 'firebase';
 
 export interface Closing {
   id: string;
@@ -61,6 +62,10 @@ export class DataService {
 
   orderan$: Observable<any>;
   filterOrderanTgl$: BehaviorSubject<string|null>;
+
+  stock$: Observable<any>;
+  readyFilter$: BehaviorSubject<boolean|null>;
+  printedFilter$: BehaviorSubject<boolean|null>;
 
   tahun = new Date().getFullYear().toString();
   bulan = ('0' + (new Date().getMonth() + 1)).slice(-2);
@@ -143,18 +148,40 @@ export class DataService {
     this.db.collection('orderan').doc(id).delete();
   }
 
-  getStockGudang(): Observable<Stock[]> {
-    return this.db.collection<Stock>('gudang', ref =>
-      ref.where('ready', '==', true).where('printed', '==', false)
-    ).snapshotChanges().pipe(
-      map(actions => {
-        return actions.map(a => {
-          const data = a.payload.doc.data();
-          const id = a.payload.doc.id;
-          return { id, ...data };
-        });
-      })
+  getStockGudang($ready?: boolean|null, $printed?: boolean|null) {
+    this.readyFilter$ = new BehaviorSubject($ready);
+    this.printedFilter$ = new BehaviorSubject($printed);
+    // tslint:disable-next-line: deprecation
+    this.stock$ = combineLatest(
+      this.readyFilter$,
+      this.printedFilter$
+    ).pipe(
+      switchMap(([ready, printed]) =>
+        this.db.collection('gudang', ref => {
+          let query: firebase.firestore.CollectionReference | firebase.firestore.Query = ref;
+          if (ready !== null) { query = query.where('ready', '==', ready); }
+          if (printed !== null) { query = query.where('printed', '==', printed); }
+          return query;
+        }).snapshotChanges().pipe(
+          map(actions => {
+            return actions.map(a => {
+              const data = a.payload.doc.data() as Stock[];
+              const id = a.payload.doc.id;
+              return { id, ...data };
+            });
+          })
+        )
+      )
     );
+  }
+  filterStockReady(ready: boolean|null) {
+    this.readyFilter$.next(ready);
+  }
+  filterStockPrinted(printed: boolean|null) {
+    this.printedFilter$.next(printed);
+  }
+  async updateStockToko(stock: Stock) {
+    return this.db.collection('gudang').doc(stock.id).update({toko: stock.toko.toUpperCase().trim()});
   }
   async updateStockDiprint(stocks: Stock[]) {
     const batch = this.db.firestore.batch();
@@ -162,7 +189,7 @@ export class DataService {
       const docRef = this.db.collection('gudang').doc(stock.id).ref;
       batch.update(docRef, {printed: true});
     });
-    return await batch.commit();
+    return batch.commit();
   }
 
   getTimeNow() {

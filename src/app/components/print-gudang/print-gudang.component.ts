@@ -14,6 +14,7 @@ export class PrintGudangComponent implements OnInit {
 
   stock: Stock[]; task;
   stockSorted: Stock[];
+  mode = 'print';
 
   options; option; selected = -1;
 
@@ -21,15 +22,32 @@ export class PrintGudangComponent implements OnInit {
 
   constructor(
     private pdf: PdfService,
-    private data: DataService,
+    public data: DataService,
     private popup: PopupService,
   ) {
     this.options = this.pdf.getOptions();
-    this.task = this.data.getStockGudang().subscribe(res => {
+    this.data.getStockGudang(true, false);
+    this.task = this.data.stock$.subscribe(res => {
       this.stock = res;
       this.stockSorted = res.slice();
-      // console.log(res);
+      console.log(res);
     });
+  }
+
+  filter(mode: string) {
+    this.mode = mode;
+    switch (mode) {
+      case 'print': {
+        this.data.filterStockPrinted(false);
+        this.data.filterStockReady(true);
+        break;
+      }
+      case 'stock': {
+        this.data.filterStockPrinted(null);
+        this.data.filterStockReady(null);
+        break;
+      }
+    }
   }
 
   ngOnInit() {
@@ -75,6 +93,12 @@ export class PrintGudangComponent implements OnInit {
     );
     // if (confirm('Yakin sudah di print semua?')) {
     // }
+  }
+  validateToko(stock: Stock) {
+    this.data.updateStockToko(stock).then(
+      () => console.log('sukses'),
+      (err) => console.log(err)
+    );
   }
 
 }

@@ -6,10 +6,17 @@
     <mat-card-header>
       <mat-card-title style="margin:0">
         List Stock Gudang&nbsp;
-        <mat-chip-list style="display: inline-flex;">
-          <mat-chip color="primary" selected>{{stockSorted.length}}pc</mat-chip>
+        <mat-chip-list style="display: inline-flex;padding-bottom: 1em;padding-top: .4375em;">
+          <mat-chip color="primary" [selected]="mode==='stock'" (click)="filter('stock')">
+            <span *ngIf="mode==='stock'">Stock Ready: {{stockSorted.length}}pc</span>
+            <span *ngIf="mode!=='stock'">Mode Stock</span>
+          </mat-chip>
+          <mat-chip color="warn" [selected]="mode==='print'" (click)="filter('print')">
+            <span *ngIf="mode==='print'">Belum Print: {{stockSorted.length}}pc</span>
+            <span *ngIf="mode!=='print'">Mode Print</span>
+          </mat-chip>
         </mat-chip-list>&nbsp;&nbsp;
-        <mat-form-field style="font-size: 14px;">
+        <mat-form-field style="font-size: 14px;" *ngIf="mode==='print'">
           <mat-label>Pilih Merk Label</mat-label>
           <mat-select name="option" (selectionChange)="pilihLabel(option)" [(ngModel)]="option">
             <mat-option *ngFor="let option of options; let i = index" [value]="option.name">{{option.name}}</mat-option>
@@ -17,7 +24,7 @@
         </mat-form-field>&nbsp;
         <section style="display: inline-flex;
         border: 1px #b9b3b3 solid;
-        border-radius: 5px;">
+        border-radius: 5px;" *ngIf="mode==='print'">
           <button mat-flat-button color="warn" (click)="printLabel()" [disabled]="selected<0">
             <mat-icon>print</mat-icon>&nbsp;PRINT LABEL
           </button>
@@ -56,8 +63,11 @@
               <span *ngIf="orderan.status=='fullkeep'" style="color: orange"><strong>{{orderan.status | uppercase}}</strong></span>
             </td> -->
             <td>
-              <button mat-icon-button color="warn">
+              <button mat-icon-button color="warn" style="display: contents;">
                 <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="validateToko(stock)">
+                <mat-icon>refresh</mat-icon>
               </button>
             </td>
           </tr>
