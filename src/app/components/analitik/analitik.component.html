@@ -1,29 +1,69 @@
 <head>
     <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
     <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
-  </head>
+</head>
 
   <br><br><br>
   <div class="container">
-    <mat-form-field class="example-full-width">
-        <input matInput [matDatepicker]="picker" placeholder="Pilih Tanggal Kirim" [formControl]="date">
-        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker touchUi #picker></mat-datepicker>
-    </mat-form-field>
-    <button class="btn btn-secondary" type="button" (click)="tampil()">
-        <i class="fa fa-search"></i>TAMPILKAN
-    </button>
+
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title style="margin:0">
+          Analitik Barang Datang & Keluar&nbsp;
+          <mat-chip-list style="display: inline-flex;padding-bottom: 1em;padding-top: .4375em;">
+            <mat-chip color="primary" [selected]="mode==='closing'" (click)="changeMode('closing')">
+              <span *ngIf="mode==='closing'">Mode Closing</span>
+              <span *ngIf="mode!=='closing'">Mode Closing</span>
+            </mat-chip>
+            <mat-chip color="primary" [selected]="mode==='datang'" (click)="changeMode('datang')">
+              <span *ngIf="mode==='datang'">Mode Ambilan</span>
+              <span *ngIf="mode!=='datang'">Mode Ambilan</span>
+            </mat-chip>
+          </mat-chip-list>&nbsp;&nbsp;
+          <br>
+          <mat-form-field class="example-full-width">
+            <input matInput [matDatepicker]="picker" [placeholder]="mode=='closing'?'Pilih Tanggal Kirim':'Dari Tanggal'" [formControl]="date">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker></mat-datepicker>
+          </mat-form-field>&nbsp;
+          <mat-form-field class="example-full-width" *ngIf="mode==='datang'">
+            <input matInput [matDatepicker]="picker2" placeholder="Hingga Tanggal" [formControl]="dateEnd">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker touchUi #picker2></mat-datepicker>
+          </mat-form-field>&nbsp;
+          <button class="btn btn-secondary" type="button" (click)="tampil()">
+            <i class="fa fa-search"></i>TAMPILKAN
+          </button>
+        </mat-card-title>
+        <mat-card-subtitle style="margin:0">
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+        <div *ngIf="mode==='datang' && orderan">
+          <strong>TOTAL: {{total}}pcs</strong>
+          <div *ngFor="let barang of sort(orderan | groupBy:'toko' | pairs) | orderBy:'-jumlah'">
+            {{barang.toko}} - {{barang.jumlah}}
+          </div>
+        </div>
+
+        <div *ngIf="mode==='closing' && closing" class="container">
+          <br><strong class="center">BARANG DIKIRIM TANGGAL {{tgl}}:</strong><br>
+          "ID INVOICE";"BARCODE";"NAMA BARANG";"WARNA";"HARGA JUAL";"CS";"CUSTOMER";"TOKO";"EKSPEDISI";"SERVICE";"BERAT";"ONGKIR";"REAL ONGKIR";"DISKON"
+          <div *ngFor="let items of closing">
+            <div *ngFor="let barang of items.listBarang">
+              "{{ items.id }}";"{{ barang | pluck: 'barcode' }}";"{{ barang | pluck: 'nama' }}";"{{ barang | pluck: 'warna' }}";"{{ barang | pluck: 'harga' }}";"{{ items.cs }}";"{{ items.penerima }}";"{{ barang | pluck: 'toko' }}";"{{items.ekspedisi}}";"{{items.service}}";"{{items.berat}}";"{{items.ongkir}}";"{{items.realOngkir}}";"{{items.diskon}}"
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+
+
   </div>
 
-  <div *ngIf="closing; else noItems" class="container">
-      <br><strong class="center">BARANG DIKIRIM TANGGAL {{tgl}}:</strong><br>
-    "ID INVOICE";"BARCODE";"NAMA BARANG";"WARNA";"HARGA JUAL";"CS";"CUSTOMER";"TOKO";"EKSPEDISI";"SERVICE";"BERAT";"ONGKIR";"REAL ONGKIR";"DISKON"
-    <div *ngFor="let items of closing">
-      <div *ngFor="let barang of items.listBarang">
-        "{{ items.id }}";"{{ barang | pluck: 'barcode' }}";"{{ barang | pluck: 'nama' }}";"{{ barang | pluck: 'warna' }}";"{{ barang | pluck: 'harga' }}";"{{ items.cs }}";"{{ items.penerima }}";"{{ barang | pluck: 'toko' }}";"{{items.ekspedisi}}";"{{items.service}}";"{{items.berat}}";"{{items.ongkir}}";"{{items.realOngkir}}";"{{items.diskon}}"
-      </div>
-    </div>
-  </div>
 
     <!--
     <div *ngFor="let item of closing | groupBy: 'tglDikirim' | keyvalue">

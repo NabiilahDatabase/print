@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DataService } from 'src/app/services/data.service';
+import { DataService, Orderan } from 'src/app/services/data.service';
 import { Observable } from 'rxjs';
 import { PopupService } from 'src/app/services/popup.service';
 
@@ -26,12 +26,17 @@ const moment = _rollupMoment || _moment;
 })
 export class AnalitikComponent implements OnInit {
 
-  date = new FormControl(moment());
-  tgl;
+  date = new FormControl();
+  dateEnd = new FormControl();
+  tgl; tglUnix; tglUnix2;
 
   task;
   displayedColumns: string[] = ['id', 'cs', 'penerima', 'jumlah', 'total', 'status'];
   closing: Observable<any>;
+
+  orderan: Orderan[]; total: number;
+
+  mode = 'closing';
 
   constructor(
     private dataService: DataService,
@@ -41,17 +46,37 @@ export class AnalitikComponent implements OnInit {
     this.adapter.setLocale('id');
     this.date.valueChanges.subscribe(tgl => {
       this.tgl = moment(tgl).format('YYYYMMDD');
+      this.tglUnix = moment(tgl).unix() * 1000;
+    });
+    this.dateEnd.valueChanges.subscribe(tgl => {
+      this.tglUnix2 = moment(tgl).unix() * 1000;
     });
   }
 
   ngOnInit() {
   }
-
   tampil() {
-    this.task = this.dataService.getClosing('tglDikirim', this.tgl).subscribe(res => {
-      this.closing = res;
-      console.log('Tampilkan tgl ' + this.tgl + ': ' + res);
-    });
+    if (this.mode === 'closing') {
+      this.task = this.dataService.getClosing('tglDikirim', this.tgl).subscribe(res => {
+        this.closing = res;
+        console.log('Tampilkan tgl ' + this.tgl + ': ' + res);
+      });
+    } else {
+      this.task = this.dataService.getAmbilanRange(this.tglUnix, this.tglUnix2).subscribe(res => {
+        this.orderan = res;
+        console.log('jan: ', res);
+      });
+    }
+  }
+  changeMode(m: string) {
+    this.mode = m;
   }
 
+  sort(arr: any[]) {
+    const data = arr.map(x => ({toko: x[0], jumlah: x[1].length}));
+    let count = 0;
+    data.forEach(x => count += x.jumlah);
+    this.total = count;
+    return data;
+  }
 }

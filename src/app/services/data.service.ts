@@ -192,6 +192,20 @@ export class DataService {
     return batch.commit();
   }
 
+  getAmbilanRange(unixStart: number, unixEnd: number) {
+    return this.db.collection<Orderan>('orderan', ref =>
+        ref.orderBy('wktScan').startAt(unixStart).endAt(unixEnd).where('status', '==', 'diambil')
+      ).snapshotChanges().pipe(
+      map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as Orderan;
+          const id = a.payload.doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
   getTimeNow() {
     return moment().toDate().getTime();
   }
